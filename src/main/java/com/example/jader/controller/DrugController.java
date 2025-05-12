@@ -1,36 +1,34 @@
 package com.example.jader.controller;
 
-import com.example.jader.dto.DrugNameCountDto;
-import com.example.jader.service.DrugService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import com.example.jader.dto.DrugNameCountDto;
+import com.example.jader.dto.ReactionTermCountDto;
+import com.example.jader.service.DrugService;
+import com.example.jader.service.ReactionService;
 
 @Controller
-@RequestMapping("/drugs") // このコントローラ内のメソッドは "/drugs" プレフィックスを持つ
+@RequestMapping("/drugs")
 public class DrugController {
 
 	private final DrugService drugService;
+	private final ReactionService reactionService;
 
 	@Autowired
-	public DrugController(DrugService drugService) {
+	public DrugController(DrugService drugService, ReactionService reactionService) {
 		this.drugService = drugService;
+		this.reactionService = reactionService;
 	}
 
-	/**
-	 * 一般名検索ページを表示します。
-	 * キーワードが指定されていれば検索結果も表示します。
-	 *
-	 * @param keyword 検索キーワード (任意)
-	 * @param model   ビューに渡すデータを格納するオブジェクト
-	 * @return 表示するThymeleafテンプレート名
-	 */
-	@GetMapping("/search") // URLは /drugs/search になります
+	@GetMapping("/search")
 	public String searchPage(@RequestParam(name = "drugNameKeyword", required = false) String keyword, Model model) {
 		List<DrugNameCountDto> results;
 		if (keyword != null && !keyword.trim().isEmpty()) {
@@ -46,11 +44,22 @@ public class DrugController {
 		return "drug-search"; // src/main/resources/templates/drug-search.html を参照
 	}
 
-	// アプリケーションのトップページとしてこの検索ページを表示したい場合は、以下のようにマッピングも可能
-	// @GetMapping({"/", "/index"})
-	// public String indexPage(@RequestParam(name = "drugNameKeyword", required = false) String keyword, Model model) {
-	//     // searchPageメソッドと同様のロジック
-	//     // ...
-	//     return "drug-search";
-	// }
+	@PostMapping("/adverse-reactions")  // フォーム action と合わせる
+    public String showAdverseReactionList(
+            @RequestParam(name = "selectedDrugNames", required = false) List<String> selectedDrugNames,
+            Model model) {
+
+        if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
+            model.addAttribute("message", "医薬品が選択されていません。");
+            return "drug-search";
+        }
+
+        List<ReactionTermCountDto> reactionCounts =
+            reactionService.getReactionTermCounts(selectedDrugNames);
+
+        model.addAttribute("reactionCounts", reactionCounts);
+        model.addAttribute("selectedDrugNamesForDisplay",
+                           String.join(", ", selectedDrugNames));
+        return "reaction-term-list";
+    }
 }

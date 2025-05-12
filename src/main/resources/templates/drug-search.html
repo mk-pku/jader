@@ -52,6 +52,67 @@
       </form>
     </div>
 
+    <form
+      th:action="@{/drugs/adverse-reactions}"
+      method="post"
+      th:if="${results != null and not #lists.isEmpty(results)}"
+    >
+      <h2>
+        検索結果:
+        <span
+          th:if="${keyword != null}"
+          th:text="'「' + ${keyword} + '」'"
+        ></span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <input
+                type="checkbox"
+                id="selectAllDrugs"
+                onclick="toggleAll(this)"
+              />
+              選択
+            </th>
+            <th>医薬品一般名（代表名）</th>
+            <th>件数（DB内総数）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="result, iterStat : ${results}">
+            <td>
+              <input
+                type="checkbox"
+                name="selectedDrugNames"
+                th:value="${result.drugName}"
+                th:id="'drug_' + ${iterStat.index}"
+                class="drug-checkbox"
+              />
+            </td>
+            <td>
+              <label
+                th:for="'drug_' + ${iterStat.index}"
+                th:text="${result.drugName}"
+              ></label>
+            </td>
+            <td th:text="${result.count}"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="submit" style="margin-top: 10px">
+        選択した医薬品の有害事象の割合を見る
+      </button>
+    </form>
+    <script>
+      function toggleAll(source) {
+        checkboxes = document.getElementsByClassName("drug-checkbox");
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+          checkboxes[i].checked = source.checked;
+        }
+      }
+    </script>
+
     <div
       th:if="${results == null and keyword != null and not keyword.trim().isEmpty()}"
     >
@@ -60,25 +121,5 @@
         >」に該当する医薬品は見つかりませんでした。
       </p>
     </div>
-
-    <div th:if="${results != null and not #lists.isEmpty(results)}">
-      <h2>検索結果: 「<span th:text="${keyword}"></span>」</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>医薬品一般名</th>
-            <th>件数</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="result : ${results}">
-            <td th:text="${result.drugName}"></td>
-            <td th:text="${result.count}"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div th:if="${keyword == null or keyword.trim().isEmpty()}"></div>
   </body>
 </html>
