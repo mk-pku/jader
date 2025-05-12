@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: jader
+  datasource:
+    url: jdbc:mysql://localhost:3306/pmda_fukusayoudb
+    username: root
+    password: MySQL
+  jpa:
+    show-sql: true
