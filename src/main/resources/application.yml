@@ -7,3 +7,6 @@ spring:
     password: MySQL
   jpa:
     show-sql: true
+logging:
+  level:
+    root: DEBUG

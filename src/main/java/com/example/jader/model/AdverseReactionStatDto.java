@@ -1,4 +1,4 @@
-package com.example.jader.dto;
+package com.example.jader.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdverseReactionStatDto {
-	private String reactionTerm;
-	private Long count;
-	private Double percentage;
+    private String reactionTerm;
+    private Long count;
+    private Double percentage;
 }

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.jader.dto.DrugNameCountDto;
-import com.example.jader.dto.ReactionTermCountDto;
+import com.example.jader.model.DrugNameCountDto;
+import com.example.jader.model.ReactionTermCountDto;
 import com.example.jader.service.DrugService;
 import com.example.jader.service.ReactionService;
 
