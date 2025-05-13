@@ -18,13 +18,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "reac")
+@Table(name = "hist")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reac { // クラス名をReacからReactionへ変更
+public class HistoryEntry { // クラス名をHistからHistoryへ変更（より分かりやすく）
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,21 +40,13 @@ public class Reac { // クラス名をReacからReactionへ変更
 	@Comment("報告回数")
 	private Byte reportCount; // TINYINT
 
-	@Column(name = "reaction_seq")
-	@Comment("有害事象連番")
-	private Short reactionSeq; // SMALLINT
+	@Column(name = "history_seq")
+	@Comment("原疾患等連番")
+	private Short historySeq; // SMALLINT
 
-	@Column(name = "reaction_term", length = 32)
-	@Comment("有害事象")
-	private String reactionTerm;
-
-	@Column(name = "outcome", length = 16)
-	@Comment("転帰")
-	private String outcome;
-
-	@Column(name = "onset_date", length = 32) // スキーマ定義は CHAR でしたが、日付関連データ。ここではStringのまま。
-	@Comment("有害事象の発現日")
-	private String onsetDate;
+	@Column(name = "disease_name", length = 32)
+	@Comment("原疾患等")
+	private String diseaseName;
 
 	@Column(name = "createby", length = 32)
 	@Comment("作成者")

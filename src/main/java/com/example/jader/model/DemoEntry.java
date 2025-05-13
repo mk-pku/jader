@@ -24,7 +24,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Demo {
+public class DemoEntry {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

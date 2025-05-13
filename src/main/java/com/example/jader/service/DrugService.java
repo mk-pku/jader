@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.jader.dto.DrugNameCountDto;
+import com.example.jader.model.DrugNameCountDto;
 import com.example.jader.repository.DrugRepository;
 
 @Service
@@ -26,13 +26,5 @@ public class DrugService {
 			return Collections.emptyList();
 		}
 		return drugRepository.findDrugNameAndCountByKeyword(keyword.trim());
-	}
-
-	/**
-	 * 全ての医薬品について、一般名ごとの件数を取得します。
-	 * @return 医薬品一般名と件数のリスト
-	 */
-	public List<DrugNameCountDto> getAllDrugNameAndCount() {
-		return drugRepository.findAllDrugNameAndCount();
 	}
 }
