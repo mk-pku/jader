@@ -21,7 +21,7 @@
         <tbody>
           <tr th:each="dto : ${reactionCounts}">
             <td th:text="${dto.reactionTerm}"></td>
-            <td th:text="${dto.count}"></td>
+            <td th:text="${dto.getPercentageDisplay}"></td>
           </tr>
         </tbody>
       </table>
