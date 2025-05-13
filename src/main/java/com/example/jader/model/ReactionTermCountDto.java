@@ -8,6 +8,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReactionTermCountDto {
-    private String reactionTerm;
-    private Long count;
+	private String reactionTerm;
+	private Long count;
+	private double percentage;
+	
+	public ReactionTermCountDto(String reactionTerm, long count) {
+		this.reactionTerm = reactionTerm;
+		this.count = count;
+	}
+	
+	public String getPercentageDisplay() {
+		return String.format("%.3f%%", percentage);
+	}
 }
