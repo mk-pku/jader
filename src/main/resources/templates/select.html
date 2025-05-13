@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>検索結果の選択</title>
+    <style></style>
+  </head>
+  <body>
+    <h1>医薬品一覧</h1>
+
+    <div th:if="${results != null and !#lists.isEmpty(results)}">
+      <h2 th:text="'「' + ${keyword} + '」 の検索結果'"></h2>
+      <form th:action="@{/drugs/result}" method="post">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  id="selectAll"
+                  onclick="toggleAll(this)"
+                />
+                全選択
+              </th>
+              <th>医薬品一般名</th>
+              <th>件数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="r, stat : ${results}">
+              <td>
+                <input
+                  type="checkbox"
+                  name="selectedDrugNames"
+                  th:value="${r.drugName}"
+                  th:id="'chk_' + ${stat.index}"
+                  class="chk"
+                />
+              </td>
+              <td>
+                <label
+                  th:for="'chk_' + ${stat.index}"
+                  th:text="${r.drugName}"
+                ></label>
+              </td>
+              <td th:text="${r.count}"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" style="margin-top: 10px">
+          選択した医薬品の有害事象を表示
+        </button>
+      </form>
+    </div>
+
+    <div th:if="${results == null or #lists.isEmpty(results)}">
+      <p
+        th:if="${keyword != null}"
+        th:text="'「' + ${keyword} + '」 に該当する医薬品はありませんでした。'"
+      ></p>
+    </div>
+
+    <p><a th:href="@{/drugs/index}">検索に戻る</a></p>
+
+    <script>
+      function toggleAll(src) {
+        const chks = document.querySelectorAll(".chk");
+        chks.forEach((c) => (c.checked = src.checked));
+      }
+    </script>
+  </body>
+</html>

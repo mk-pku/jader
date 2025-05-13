@@ -27,37 +27,40 @@ public class DrugController {
 		this.drugService = drugService;
 		this.reactionService = reactionService;
 	}
+	
+	@GetMapping("")
+	public String index() {
+		return "index";
+	}
 
-	@GetMapping("/search")
-	public String searchPage(@RequestParam(name = "drugNameKeyword", required = false) String keyword, Model model) {
-		List<DrugNameCountDto> results;
+	@GetMapping("/select")
+	public String selectPage(@RequestParam(name="drugNameKeyword", required=false) String keyword, Model model) {
+		List<DrugNameCountDto> results = null;
 		if (keyword != null && !keyword.trim().isEmpty()) {
 			results = drugService.searchDrugNameAndCount(keyword.trim());
-		} else {
-			results = null;
 		}
 
 		model.addAttribute("results", results);
-		model.addAttribute("keyword", keyword); // 検索フォームに前回のキーワードを再表示するため
-		return "drug-search"; // src/main/resources/templates/drug-search.html を参照
+		model.addAttribute("keyword", keyword);
+		return "select";
 	}
 
-	@PostMapping("/adverse-reactions")  // フォーム action と合わせる
-    public String showAdverseReactionList(
-            @RequestParam(name = "selectedDrugNames", required = false) List<String> selectedDrugNames,
-            Model model) {
+	@PostMapping("/result")
+	public String resultPage(
+			@RequestParam(name="selectedDrugNames", required=false) List<String> selectedDrugNames,
+			Model model) {
 
-        if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
-            model.addAttribute("message", "医薬品が選択されていません。");
-            return "drug-search";
-        }
+		if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
+			model.addAttribute("message", "医薬品が選択されていません。");
+			return "index";
+		}
 
-        List<ReactionTermCountDto> reactionCounts =
-            reactionService.getReactionTermCounts(selectedDrugNames);
+		List<ReactionTermCountDto> reactionCounts =
+			reactionService.getReactionTermCounts(selectedDrugNames);
 
-        model.addAttribute("reactionCounts", reactionCounts);
-        model.addAttribute("selectedDrugNamesForDisplay",
-                           String.join(", ", selectedDrugNames));
-        return "reaction-term-list";
-    }
+		model.addAttribute("reactionCounts", reactionCounts);
+		model.addAttribute("selectedDrugNamesForDisplay",
+						   String.join(", ", selectedDrugNames));
+		return "result";
+	}
 }

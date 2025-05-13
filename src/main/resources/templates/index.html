@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>医薬品一般名検索</title>
+  </head>
+  <body>
+    <h1>医薬品一般名検索</h1>
+    <form th:action="@{/drugs/select}" method="get">
+      <input type="text" name="drugNameKeyword" placeholder="一般名を入力..." />
+      <button type="submit">検索</button>
+    </form>
+  </body>
+</html>
