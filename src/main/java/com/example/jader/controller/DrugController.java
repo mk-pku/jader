@@ -35,6 +35,7 @@ public class DrugController {
 	public String selectPage(
 			@RequestParam(required=false) String keyword,
 			@RequestParam(required=false, defaultValue="generic") String nameType,
+			@RequestParam(required=false) String formType,
 			Model model) {
 
 		List<DrugNameCountDto> results = null;
@@ -44,6 +45,7 @@ public class DrugController {
 
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("nameType", nameType);
+		model.addAttribute("formType", formType);
 		model.addAttribute("results", results);
 		return "select";
 	}
