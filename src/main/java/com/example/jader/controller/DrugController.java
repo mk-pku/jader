@@ -34,9 +34,7 @@ public class DrugController {
 		if (keyword != null && !keyword.trim().isEmpty()) {
 			results = drugService.searchDrugNameAndCount(keyword.trim());
 		} else {
-			// 初期表示時やキーワードが空の場合は、例えば全件の集計結果を表示するか、何も表示しないか選べます。
-			// results = drugService.getAllDrugNameAndCount(); // 全件集計
-			results = null; // または空のリストやnullで、テンプレート側で表示を制御
+			results = null;
 		}
 
 		model.addAttribute("results", results);

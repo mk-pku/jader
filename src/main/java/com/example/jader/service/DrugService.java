@@ -27,12 +27,4 @@ public class DrugService {
 		}
 		return drugRepository.findDrugNameAndCountByKeyword(keyword.trim());
 	}
-
-	/**
-	 * 全ての医薬品について、一般名ごとの件数を取得します。
-	 * @return 医薬品一般名と件数のリスト
-	 */
-	public List<DrugNameCountDto> getAllDrugNameAndCount() {
-		return drugRepository.findAllDrugNameAndCount();
-	}
 }
