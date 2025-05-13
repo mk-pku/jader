@@ -15,28 +15,21 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "demo")
+@Table(name = "hist")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class DemoEntry {
+public class HistEntry {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String caseId;
 	private Byte reportCount;
-	private String sex;
-	private String age;
-	private String weight;
-	private String height;
-	private String reportPeriod;
-	private String status;
-	private String reportType;
-	private String reporterQualification;
-	private String e2bType;
+	private Short historySeq;
+	private String diseaseName;
 	private String createdBy;
 	private LocalDateTime createdDate;
 	private String lastModifiedBy;
