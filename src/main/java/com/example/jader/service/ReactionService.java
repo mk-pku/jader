@@ -3,7 +3,6 @@ package com.example.jader.service;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,6 @@ import com.example.jader.repository.ReactionRepository;
 public class ReactionService {
     private final ReactionRepository reactionRepository;
 
-    @Autowired
     public ReactionService(ReactionRepository reactionRepository) {
         this.reactionRepository = reactionRepository;
     }
