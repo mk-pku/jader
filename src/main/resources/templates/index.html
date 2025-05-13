@@ -2,12 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>医薬品一般名検索</title>
+    <title>医薬品検索</title>
   </head>
   <body>
-    <h1>医薬品一般名検索</h1>
+    <h1>医薬品検索</h1>
     <form th:action="@{/drugs/select}" method="get">
-      <input type="text" name="drugNameKeyword" placeholder="一般名を入力..." />
+      <input
+        type="text"
+        name="keyword"
+        placeholder="キーワードを入力…"
+        th:value="${keyword}"
+      />
+
+      <label>
+        <input
+          type="radio"
+          name="nameType"
+          value="generic"
+          th:checked="${category == null or category=='generic'}"
+        />
+        一般名
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="nameType"
+          value="product"
+          th:checked="${category=='product'}"
+        />
+        販売名
+      </label>
+
       <button type="submit">検索</button>
     </form>
   </body>

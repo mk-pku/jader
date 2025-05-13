@@ -2,7 +2,6 @@ package com.example.jader.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,6 @@ public class DrugController {
 	private final DrugService drugService;
 	private final ReactionService reactionService;
 
-	@Autowired
 	public DrugController(DrugService drugService, ReactionService reactionService) {
 		this.drugService = drugService;
 		this.reactionService = reactionService;
@@ -34,33 +32,38 @@ public class DrugController {
 	}
 
 	@GetMapping("/select")
-	public String selectPage(@RequestParam(name="drugNameKeyword", required=false) String keyword, Model model) {
+	public String selectPage(
+			@RequestParam(required=false) String keyword,
+			@RequestParam(required=false, defaultValue="generic") String nameType,
+			Model model) {
+
 		List<DrugNameCountDto> results = null;
 		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = drugService.searchDrugNameAndCount(keyword.trim());
+			results = drugService.searchDrugNameAndCount(keyword.trim(), nameType);
 		}
 
-		model.addAttribute("results", results);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("nameType", nameType);
+		model.addAttribute("results", results);
 		return "select";
 	}
 
 	@PostMapping("/result")
 	public String resultPage(
-			@RequestParam(name="selectedDrugNames", required=false) List<String> selectedDrugNames,
+			@RequestParam(required=false) List<String> candArray,
 			Model model) {
 
-		if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
+		if (candArray == null || candArray.isEmpty()) {
 			model.addAttribute("message", "医薬品が選択されていません。");
 			return "index";
 		}
 
 		List<ReactionTermCountDto> reactionCounts =
-			reactionService.getReactionTermCounts(selectedDrugNames);
+			reactionService.getReactionTermCounts(candArray);
 
 		model.addAttribute("reactionCounts", reactionCounts);
 		model.addAttribute("selectedDrugNamesForDisplay",
-						   String.join(", ", selectedDrugNames));
+						   String.join(", ", candArray));
 		return "result";
 	}
 }

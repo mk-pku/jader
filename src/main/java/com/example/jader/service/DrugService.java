@@ -3,7 +3,6 @@ package com.example.jader.service;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,15 +15,22 @@ public class DrugService {
 
 	private final DrugRepository drugRepository;
 
-	@Autowired
 	public DrugService(DrugRepository drugRepository) {
 		this.drugRepository = drugRepository;
 	}
 
-	public List<DrugNameCountDto> searchDrugNameAndCount(String keyword) {
+	/**
+	 * @param nameType "generic" or "product"
+	 */
+	public List<DrugNameCountDto> searchDrugNameAndCount(String keyword, String nameType) {
 		if (keyword == null || keyword.trim().isEmpty()) {
 			return Collections.emptyList();
 		}
-		return drugRepository.findDrugNameAndCountByKeyword(keyword.trim());
+		keyword = keyword.trim();
+		if ("product".equals(nameType)) {
+			return drugRepository.findByProductName(keyword);
+		} else {
+			return drugRepository.findByGenericName(keyword);
+		}
 	}
 }

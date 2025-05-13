@@ -19,5 +19,13 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "WHERE d.drugName LIKE CONCAT('%', :keyword, '%') "
 		 + "GROUP BY d.drugName "
 		 + "ORDER BY COUNT(d) DESC, d.drugName ASC")
-	List<DrugNameCountDto> findDrugNameAndCountByKeyword(@Param("keyword") String keyword);
+	List<DrugNameCountDto> findByGenericName(@Param("keyword") String keyword);
+
+	// 医薬品（販売名）の部分一致検索
+	@Query("SELECT new com.example.jader.model.DrugNameCountDto(d.productName, COUNT(d)) "
+		 + "FROM DrugEntry d "
+		 + "WHERE d.productName LIKE CONCAT('%', :keyword, '%') "
+		 + "GROUP BY d.productName "
+		 + "ORDER BY COUNT(d) DESC, d.productName ASC")
+	List<DrugNameCountDto> findByProductName(@Param("keyword") String keyword);
 }
