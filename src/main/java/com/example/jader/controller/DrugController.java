@@ -40,11 +40,10 @@ public class DrugController {
 
 		List<NameCountDto> results = null;
 		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = drugService.searchDrugNameAndCount(keyword.trim(), nameType);
+			results = drugService.searchIndicationCounts(keyword.trim());
 		}
 
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("nameType", nameType);
 		model.addAttribute("formType", formType);
 		model.addAttribute("results", results);
 		return "select";
@@ -98,10 +97,29 @@ public class DrugController {
 			return "index";
 		}
 
-		List<NameStatsDto> reactionCounts =
+		List<NameStatsDto> indicationCounts =
 			drugService.getIndicationCounts(candArray);
 
-		model.addAttribute("nameCounts", reactionCounts);
+		model.addAttribute("nameCounts", indicationCounts);
+		model.addAttribute("selectedNamesForDisplay",
+						   String.join(", ", candArray));
+		return "result";
+	}
+	
+	@PostMapping(value="/result", params="formType=2")
+	public String resultPage2(
+			@RequestParam(required=false) List<String> candArray,
+			Model model) {
+
+		if (candArray == null || candArray.isEmpty()) {
+			model.addAttribute("message", "使用理由が選択されていません。");
+			return "index";
+		}
+
+		List<NameStatsDto> drugNameCounts =
+			drugService.getDrugNameCounts(candArray);
+
+		model.addAttribute("nameCounts", drugNameCounts);
 		model.addAttribute("selectedNamesForDisplay",
 						   String.join(", ", candArray));
 		return "result";

@@ -8,37 +8,37 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.jader.model.DrugEntry;
-import com.example.jader.model.DrugNameCountDto; // 作成したDTOをインポート
-import com.example.jader.model.NameCountDto;
+import com.example.jader.model.NameCountDto; // 作成したDTOをインポート
+import com.example.jader.model.NameStatsDto;
 
 @Repository
 public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 
 	// 医薬品（一般名）の部分一致検索
-	@Query("SELECT new com.example.jader.model.DrugNameCountDto(d.drugName, COUNT(d)) "
+	@Query("SELECT new com.example.jader.model.NameCountDto(d.drugName, COUNT(d)) "
 		 + "FROM DrugEntry d "
 		 + "WHERE d.drugName LIKE CONCAT('%', :keyword, '%') "
 		 + "GROUP BY d.drugName "
 		 + "ORDER BY COUNT(d) DESC, d.drugName ASC")
-	List<DrugNameCountDto> findByGenericName(@Param("keyword") String keyword);
+	List<NameCountDto> findByGenericName(@Param("keyword") String keyword);
 
 	// 医薬品（販売名）の部分一致検索
-	@Query("SELECT new com.example.jader.model.DrugNameCountDto(d.productName, COUNT(d)) "
+	@Query("SELECT new com.example.jader.model.NameCountDto(d.productName, COUNT(d)) "
 		 + "FROM DrugEntry d "
 		 + "WHERE d.productName LIKE CONCAT('%', :keyword, '%') "
 		 + "GROUP BY d.productName "
 		 + "ORDER BY COUNT(d) DESC, d.productName ASC")
-	List<DrugNameCountDto> findByProductName(@Param("keyword") String keyword);
+	List<NameCountDto> findByProductName(@Param("keyword") String keyword);
 
-	// 医薬品（販売名）の部分一致検索
-	@Query("SELECT new com.example.jader.model.DrugNameCountDto(d.indication, COUNT(d)) "
+	// 使用理由の部分一致検索
+	@Query("SELECT new com.example.jader.model.NameCountDto(d.indication, COUNT(d)) "
 		 + "FROM DrugEntry d "
 		 + "WHERE d.indication LIKE CONCAT('%', :keyword, '%') "
 		 + "GROUP BY d.indication "
 		 + "ORDER BY COUNT(d) DESC, d.indication ASC")
-	List<DrugNameCountDto> findByIndication(@Param("keyword") String keyword);
+	List<NameCountDto> findByIndication(@Param("keyword") String keyword);
 
-	// 特定の識別番号を持つ使用理由の件数
+	// 特定の医薬品名を持つ使用理由の件数
 	@Query("SELECT new com.example.jader.model.NameStatsDto("
     	 + " COALESCE(d.indication, '元データ未入力'), COUNT(d)) "
 		 + "FROM DrugEntry d "
@@ -46,5 +46,15 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "GROUP BY COALESCE(d.indication, '元データ未入力') "
 		 + "ORDER BY COUNT(d) DESC, "
 		 + "COALESCE(d.indication, '元データ未入力') ASC")
-	List<NameCountDto> findIndicationCounts(@Param("names") List<String> names);
+	List<NameStatsDto> findIndicationCounts(@Param("names") List<String> names);
+	
+	// 特定の使用理由を持つ医薬品（一般名）の件数
+	@Query("SELECT new com.example.jader.model.NameStatsDto("
+    	 + " COALESCE(d.drugName, '元データ未入力'), COUNT(d)) "
+		 + "FROM DrugEntry d "
+		 + "WHERE d.indication IN :names "
+		 + "GROUP BY COALESCE(d.drugName, '元データ未入力') "
+		 + "ORDER BY COUNT(d) DESC, "
+		 + "COALESCE(d.drugName, '元データ未入力') ASC")
+	List<NameStatsDto> findDrugNameCounts(@Param("names") List<String> names);
 }

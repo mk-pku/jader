@@ -36,11 +36,27 @@ public class DrugService {
 		}
 	}
 	
+	public List<NameCountDto> searchIndicationCounts(String keyword) {
+		if (keyword == null || keyword.trim().isEmpty()) {
+			return Collections.emptyList();
+		}
+		keyword = keyword.trim();
+		return drugRepository.findByIndication(keyword);
+	}
+	
 	public List<NameStatsDto> getIndicationCounts(List<String> selectedDrugNames) {
 		if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
 			return Collections.emptyList();
 		}
 		List<NameStatsDto> raw = drugRepository.findIndicationCounts(selectedDrugNames);
+		return CountToPercentage.process(raw);
+	}
+	
+	public List<NameStatsDto> getDrugNameCounts(List<String> selectedIndications) {
+		if (selectedIndications == null || selectedIndications.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<NameStatsDto> raw = drugRepository.findDrugNameCounts(selectedIndications);
 		return CountToPercentage.process(raw);
 	}
 }

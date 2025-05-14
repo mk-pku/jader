@@ -44,5 +44,12 @@
       <button type="submit">検索</button>
       <input type="hidden" name="formType" value="1" />
     </form>
+
+    <h1>医薬品検索3</h1>
+    <form th:action="@{/drugs/select}" method="post">
+      <input type="text" name="keyword" placeholder="キーワードを入力…" th:value="${keyword}" />
+      <button type="submit">検索</button>
+      <input type="hidden" name="formType" value="2" />
+    </form>
   </body>
 </html>
