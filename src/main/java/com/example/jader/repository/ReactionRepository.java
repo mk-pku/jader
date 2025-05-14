@@ -13,17 +13,16 @@ import com.example.jader.model.ReacEntry;
 @Repository
 public interface ReactionRepository extends JpaRepository<ReacEntry, Integer> {
 
-	// 特定の識別番号を持つ有害事象の件数
+	// 特定の医薬品名を持つ有害事象の件数
 	@Query("SELECT new com.example.jader.model.NameStatsDto("
 		 + " r.reactionTerm, "
-		 + " COUNT(DISTINCT CONCAT(r.caseId, '-', r.reportCount)) ) "
+		 + " COUNT(r.reactionTerm)) "
 		 + "FROM ReacEntry r, DrugEntry d "
 		 + "WHERE r.caseId = d.caseId "
-		 + "  AND r.reportCount = d.reportCount "
-		 + "  AND d.drugName IN :selectedDrugNames "
+		 + " AND (d.drugName IN :names OR d.productName IN :names) "
 		 + "GROUP BY r.reactionTerm "
-		 + "ORDER BY COUNT(DISTINCT CONCAT(r.caseId, '-', r.reportCount)) DESC"
-	)
-	List<NameStatsDto> findReactionTermCounts(
-		@Param("selectedDrugNames") List<String> selectedDrugNames);
+		 + "ORDER BY COUNT(r.reactionTerm) DESC")
+
+	List<NameStatsDto> statsOnReactionTermByMedicineName(
+		@Param("names") List<String> names);
 }

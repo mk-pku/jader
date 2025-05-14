@@ -24,39 +24,39 @@ public class DrugService {
 	/**
 	 * @param nameType "generic" or "product"
 	 */
-	public List<NameCountDto> searchDrugNameAndCount(String keyword, String nameType) {
+	public List<NameCountDto> countByMedicineNameLike(String keyword, String nameType) {
 		if (keyword == null || keyword.trim().isEmpty()) {
 			return Collections.emptyList();
 		}
 		keyword = keyword.trim();
 		if ("product".equals(nameType)) {
-			return drugRepository.findByProductName(keyword);
+			return drugRepository.countByProductNameLike(keyword);
 		} else {
-			return drugRepository.findByGenericName(keyword);
+			return drugRepository.countByDrugNameLike(keyword);
 		}
 	}
 	
-	public List<NameCountDto> searchIndicationCounts(String keyword) {
+	public List<NameCountDto> countByIndicationLike(String keyword) {
 		if (keyword == null || keyword.trim().isEmpty()) {
 			return Collections.emptyList();
 		}
 		keyword = keyword.trim();
-		return drugRepository.findByIndication(keyword);
+		return drugRepository.countByIndicationLike(keyword);
 	}
 	
-	public List<NameStatsDto> getIndicationCounts(List<String> selectedDrugNames) {
-		if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
+	public List<NameStatsDto> statsOnIndicationByMedicineName(List<String> medicineNames) {
+		if (medicineNames == null || medicineNames.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<NameStatsDto> raw = drugRepository.findIndicationCounts(selectedDrugNames);
+		List<NameStatsDto> raw = drugRepository.statsOnIndicationByMedicineName(medicineNames);
 		return CountToPercentage.process(raw);
 	}
 	
-	public List<NameStatsDto> getDrugNameCounts(List<String> selectedIndications) {
-		if (selectedIndications == null || selectedIndications.isEmpty()) {
+	public List<NameStatsDto> statsOnDrugNameByIndication(List<String> indications) {
+		if (indications == null || indications.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<NameStatsDto> raw = drugRepository.findDrugNameCounts(selectedIndications);
+		List<NameStatsDto> raw = drugRepository.statsOnDrugNameByIndication(indications);
 		return CountToPercentage.process(raw);
 	}
 }

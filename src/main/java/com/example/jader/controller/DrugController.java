@@ -40,7 +40,7 @@ public class DrugController {
 
 		List<NameCountDto> results = null;
 		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = drugService.searchIndicationCounts(keyword.trim());
+			results = drugService.countByIndicationLike(keyword.trim());
 		}
 
 		model.addAttribute("keyword", keyword);
@@ -58,7 +58,7 @@ public class DrugController {
 
 		List<NameCountDto> results = null;
 		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = drugService.searchDrugNameAndCount(keyword.trim(), nameType);
+			results = drugService.countByMedicineNameLike(keyword.trim(), nameType);
 		}
 
 		model.addAttribute("keyword", keyword);
@@ -79,7 +79,7 @@ public class DrugController {
 		}
 
 		List<NameStatsDto> reactionCounts =
-			reactionService.getReactionTermCounts(candArray);
+			reactionService.statsOnReactionTermByMedicineName(candArray);
 
 		model.addAttribute("nameCounts", reactionCounts);
 		model.addAttribute("selectedNamesForDisplay",
@@ -98,7 +98,7 @@ public class DrugController {
 		}
 
 		List<NameStatsDto> indicationCounts =
-			drugService.getIndicationCounts(candArray);
+			drugService.statsOnIndicationByMedicineName(candArray);
 
 		model.addAttribute("nameCounts", indicationCounts);
 		model.addAttribute("selectedNamesForDisplay",
@@ -117,7 +117,7 @@ public class DrugController {
 		}
 
 		List<NameStatsDto> drugNameCounts =
-			drugService.getDrugNameCounts(candArray);
+			drugService.statsOnDrugNameByIndication(candArray);
 
 		model.addAttribute("nameCounts", drugNameCounts);
 		model.addAttribute("selectedNamesForDisplay",

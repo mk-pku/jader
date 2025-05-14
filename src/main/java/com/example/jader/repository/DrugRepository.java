@@ -20,7 +20,7 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "WHERE d.drugName LIKE CONCAT('%', :keyword, '%') "
 		 + "GROUP BY d.drugName "
 		 + "ORDER BY COUNT(d) DESC, d.drugName ASC")
-	List<NameCountDto> findByGenericName(@Param("keyword") String keyword);
+	List<NameCountDto> countByDrugNameLike(@Param("keyword") String keyword);
 
 	// 医薬品（販売名）の部分一致検索
 	@Query("SELECT new com.example.jader.model.NameCountDto(d.productName, COUNT(d)) "
@@ -28,7 +28,7 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "WHERE d.productName LIKE CONCAT('%', :keyword, '%') "
 		 + "GROUP BY d.productName "
 		 + "ORDER BY COUNT(d) DESC, d.productName ASC")
-	List<NameCountDto> findByProductName(@Param("keyword") String keyword);
+	List<NameCountDto> countByProductNameLike(@Param("keyword") String keyword);
 
 	// 使用理由の部分一致検索
 	@Query("SELECT new com.example.jader.model.NameCountDto(d.indication, COUNT(d)) "
@@ -36,7 +36,7 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "WHERE d.indication LIKE CONCAT('%', :keyword, '%') "
 		 + "GROUP BY d.indication "
 		 + "ORDER BY COUNT(d) DESC, d.indication ASC")
-	List<NameCountDto> findByIndication(@Param("keyword") String keyword);
+	List<NameCountDto> countByIndicationLike(@Param("keyword") String keyword);
 
 	// 特定の医薬品名を持つ使用理由の件数
 	@Query("SELECT new com.example.jader.model.NameStatsDto("
@@ -46,7 +46,7 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "GROUP BY COALESCE(d.indication, '元データ未入力') "
 		 + "ORDER BY COUNT(d) DESC, "
 		 + "COALESCE(d.indication, '元データ未入力') ASC")
-	List<NameStatsDto> findIndicationCounts(@Param("names") List<String> names);
+	List<NameStatsDto> statsOnIndicationByMedicineName(@Param("names") List<String> names);
 	
 	// 特定の使用理由を持つ医薬品（一般名）の件数
 	@Query("SELECT new com.example.jader.model.NameStatsDto("
@@ -56,5 +56,5 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "GROUP BY COALESCE(d.drugName, '元データ未入力') "
 		 + "ORDER BY COUNT(d) DESC, "
 		 + "COALESCE(d.drugName, '元データ未入力') ASC")
-	List<NameStatsDto> findDrugNameCounts(@Param("names") List<String> names);
+	List<NameStatsDto> statsOnDrugNameByIndication(@Param("names") List<String> names);
 }

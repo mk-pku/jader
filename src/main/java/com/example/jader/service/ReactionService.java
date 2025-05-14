@@ -19,11 +19,11 @@ public class ReactionService {
 		this.reactionRepository = reactionRepository;
 	}
 
-	public List<NameStatsDto> getReactionTermCounts(List<String> selectedDrugNames) {
-		if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
+	public List<NameStatsDto> statsOnReactionTermByMedicineName(List<String> medicineNames) {
+		if (medicineNames == null || medicineNames.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<NameStatsDto> raw = reactionRepository.findReactionTermCounts(selectedDrugNames);
+		List<NameStatsDto> raw = reactionRepository.statsOnReactionTermByMedicineName(medicineNames);
 		return CountToPercentage.process(raw);
 	}
 }
