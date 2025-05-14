@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.jader.model.DrugNameCountDto;
 import com.example.jader.model.NameCountDto;
+import com.example.jader.model.NameStatsDto;
 import com.example.jader.service.DrugService;
 import com.example.jader.service.ReactionService;
 
@@ -31,6 +31,25 @@ public class DrugController {
 		return "index";
 	}
 
+	@PostMapping(value="/select", params="formType=2")
+	public String selectIndicationPage(
+			@RequestParam(required=false) String keyword,
+			@RequestParam(required=false) String nameType,
+			@RequestParam(required=false) String formType,
+			Model model) {
+
+		List<NameCountDto> results = null;
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			results = drugService.searchDrugNameAndCount(keyword.trim(), nameType);
+		}
+
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("nameType", nameType);
+		model.addAttribute("formType", formType);
+		model.addAttribute("results", results);
+		return "select";
+	}
+
 	@PostMapping("/select")
 	public String selectPage(
 			@RequestParam(required=false) String keyword,
@@ -38,7 +57,7 @@ public class DrugController {
 			@RequestParam(required=false) String formType,
 			Model model) {
 
-		List<DrugNameCountDto> results = null;
+		List<NameCountDto> results = null;
 		if (keyword != null && !keyword.trim().isEmpty()) {
 			results = drugService.searchDrugNameAndCount(keyword.trim(), nameType);
 		}
@@ -60,7 +79,7 @@ public class DrugController {
 			return "index";
 		}
 
-		List<NameCountDto> reactionCounts =
+		List<NameStatsDto> reactionCounts =
 			reactionService.getReactionTermCounts(candArray);
 
 		model.addAttribute("nameCounts", reactionCounts);
@@ -79,7 +98,7 @@ public class DrugController {
 			return "index";
 		}
 
-		List<NameCountDto> reactionCounts =
+		List<NameStatsDto> reactionCounts =
 			drugService.getIndicationCounts(candArray);
 
 		model.addAttribute("nameCounts", reactionCounts);

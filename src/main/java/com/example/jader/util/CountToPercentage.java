@@ -3,13 +3,13 @@ package com.example.jader.util;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.jader.model.NameCountDto;
+import com.example.jader.model.NameStatsDto;
 
 public class CountToPercentage {
 
-	public static List<NameCountDto> process(List<NameCountDto> rawList) {
+	public static List<NameStatsDto> process(List<NameStatsDto> rawList) {
 		long total = rawList.stream()
-			.mapToLong(NameCountDto::getCount)
+			.mapToLong(NameStatsDto::getCount)
 			.sum();
 
 		return rawList.stream()
