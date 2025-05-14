@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.jader.model.DrugNameCountDto;
-import com.example.jader.model.ReactionTermCountDto;
+import com.example.jader.model.NameCountDto;
 import com.example.jader.service.DrugService;
 import com.example.jader.service.ReactionService;
 
@@ -31,10 +31,11 @@ public class DrugController {
 		return "index";
 	}
 
-	@GetMapping("/select")
+	@PostMapping("/select")
 	public String selectPage(
 			@RequestParam(required=false) String keyword,
 			@RequestParam(required=false, defaultValue="generic") String nameType,
+			@RequestParam(required=false) String formType,
 			Model model) {
 
 		List<DrugNameCountDto> results = null;
@@ -44,12 +45,13 @@ public class DrugController {
 
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("nameType", nameType);
+		model.addAttribute("formType", formType);
 		model.addAttribute("results", results);
 		return "select";
 	}
 
-	@PostMapping("/result")
-	public String resultPage(
+	@PostMapping(value="/result", params="formType=0")
+	public String resultPage0(
 			@RequestParam(required=false) List<String> candArray,
 			Model model) {
 
@@ -58,11 +60,30 @@ public class DrugController {
 			return "index";
 		}
 
-		List<ReactionTermCountDto> reactionCounts =
+		List<NameCountDto> reactionCounts =
 			reactionService.getReactionTermCounts(candArray);
 
-		model.addAttribute("reactionCounts", reactionCounts);
-		model.addAttribute("selectedDrugNamesForDisplay",
+		model.addAttribute("nameCounts", reactionCounts);
+		model.addAttribute("selectedNamesForDisplay",
+						   String.join(", ", candArray));
+		return "result";
+	}
+	
+	@PostMapping(value="/result", params="formType=1")
+	public String resultPage1(
+			@RequestParam(required=false) List<String> candArray,
+			Model model) {
+
+		if (candArray == null || candArray.isEmpty()) {
+			model.addAttribute("message", "医薬品が選択されていません。");
+			return "index";
+		}
+
+		List<NameCountDto> reactionCounts =
+			drugService.getIndicationCounts(candArray);
+
+		model.addAttribute("nameCounts", reactionCounts);
+		model.addAttribute("selectedNamesForDisplay",
 						   String.join(", ", candArray));
 		return "result";
 	}

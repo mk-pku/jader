@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.jader.model.DrugNameCountDto;
+import com.example.jader.model.NameCountDto;
 import com.example.jader.repository.DrugRepository;
+import com.example.jader.util.CountToPercentage;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,5 +34,13 @@ public class DrugService {
 		} else {
 			return drugRepository.findByGenericName(keyword);
 		}
+	}
+	
+	public List<NameCountDto> getIndicationCounts(List<String> selectedDrugNames) {
+		if (selectedDrugNames == null || selectedDrugNames.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<NameCountDto> raw = drugRepository.findIndicationCounts(selectedDrugNames);
+		return CountToPercentage.process(raw);
 	}
 }

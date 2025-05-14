@@ -6,11 +6,9 @@
   </head>
   <body>
     <h1>有害事象一覧</h1>
-    <p>
-      対象医薬品: <strong th:text="${selectedDrugNamesForDisplay}"></strong>
-    </p>
+    <p>対象医薬品: <strong th:text="${selectedNamesForDisplay}"></strong></p>
 
-    <div th:if="${reactionCounts != null and !#lists.isEmpty(reactionCounts)}">
+    <div th:if="${nameCounts != null and !#lists.isEmpty(nameCounts)}">
       <table>
         <thead>
           <tr>
@@ -19,14 +17,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="dto : ${reactionCounts}">
-            <td th:text="${dto.reactionTerm}"></td>
+          <tr th:each="dto : ${nameCounts}">
+            <td th:text="${dto.name}"></td>
             <td th:text="${dto.getPercentageDisplay}"></td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div th:if="${reactionCounts == null or #lists.isEmpty(reactionCounts)}">
+    <div th:if="${nameCounts == null or #lists.isEmpty(nameCounts)}">
       <p>該当する有害事象の情報はありませんでした。</p>
     </div>
 

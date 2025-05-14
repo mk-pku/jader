@@ -3,20 +3,20 @@ package com.example.jader.util;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.jader.model.ReactionTermCountDto;
+import com.example.jader.model.NameCountDto;
 
 public class CountToPercentage {
 
-	public static List<ReactionTermCountDto> process(List<ReactionTermCountDto> rawList) {
+	public static List<NameCountDto> process(List<NameCountDto> rawList) {
 		long total = rawList.stream()
-			.mapToLong(ReactionTermCountDto::getCount)
+			.mapToLong(NameCountDto::getCount)
 			.sum();
 
 		return rawList.stream()
 			.map(dto -> {
-				String name = dto.getReactionTerm();
+				String name = dto.getName();
 				if (name == null || name.isBlank()) {
-					dto.setReactionTerm("元データ未入力");
+					dto.setName("元データ未入力");
 				}
 
 				double pct = total == 0

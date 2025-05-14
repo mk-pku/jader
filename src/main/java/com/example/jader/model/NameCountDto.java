@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReactionTermCountDto {
-	private String reactionTerm;
+public class NameCountDto {
+	private String name;
 	private Long count;
 	private double percentage;
 	
-	public ReactionTermCountDto(String reactionTerm, long count) {
-		this.reactionTerm = reactionTerm;
+	public NameCountDto(String name, long count) {
+		this.name = name;
 		this.count = count;
 	}
 	
