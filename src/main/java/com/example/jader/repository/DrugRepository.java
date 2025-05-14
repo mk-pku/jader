@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.jader.model.DrugEntry;
 import com.example.jader.model.DrugNameCountDto; // 作成したDTOをインポート
-import com.example.jader.model.IndicationCountDto;
+import com.example.jader.model.NameCountDto;
 
 @Repository
 public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
@@ -31,12 +31,13 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 	List<DrugNameCountDto> findByProductName(@Param("keyword") String keyword);
 
 	// 特定の識別番号を持つ使用理由の件数
-	@Query("SELECT new com.example.jader.model.IndicationCountDto("
+	@Query("SELECT new com.example.jader.model.NameCountDto("
     	 + " COALESCE(d.indication, '元データ未入力'), COUNT(d)) "
 		 + "FROM DrugEntry d "
 		 + "WHERE d.drugName IN :names OR d.productName IN :names "
 		 + "GROUP BY COALESCE(d.indication, '元データ未入力') "
-		 + "ORDER BY COUNT(d) DESC, indication ASC")
-	List<IndicationCountDto> findIndicationCounts(@Param("names") List<String> names);
+		 + "ORDER BY COUNT(d) DESC, "
+		 + "COALESCE(d.indication, '元データ未入力') ASC")
+	List<NameCountDto> findIndicationCounts(@Param("names") List<String> names);
 
 }

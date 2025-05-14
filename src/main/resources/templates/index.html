@@ -6,7 +6,37 @@
   </head>
   <body>
     <h1>医薬品検索</h1>
-    <form th:action="@{/drugs/select}" method="get">
+    <form th:action="@{/drugs/select}" method="post">
+      <input
+        type="text"
+        name="keyword"
+        placeholder="キーワードを入力…"
+        th:value="${keyword}"
+      />
+      <label>
+        <input
+          type="radio"
+          name="nameType"
+          value="generic"
+          th:checked="${category == null or category=='generic'}"
+        />
+        一般名
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="nameType"
+          value="product"
+          th:checked="${category=='product'}"
+        />
+        販売名
+      </label>
+      <button type="submit">検索</button>
+      <input type="hidden" name="formType" value="0" />
+    </form>
+
+    <h1>医薬品検索2</h1>
+    <form th:action="@{/drugs/select}" method="post">
       <input
         type="text"
         name="keyword"
@@ -33,36 +63,6 @@
       </label>
       <button type="submit">検索</button>
       <input type="hidden" name="formType" value="1" />
-    </form>
-
-    <h1>医薬品検索2</h1>
-    <form th:action="@{/drugs/select}" method="get">
-      <input
-        type="text"
-        name="keyword"
-        placeholder="キーワードを入力…"
-        th:value="${keyword}"
-      />
-      <label>
-        <input
-          type="radio"
-          name="nameType"
-          value="generic"
-          th:checked="${category == null or category=='generic'}"
-        />
-        一般名
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="nameType"
-          value="product"
-          th:checked="${category=='product'}"
-        />
-        販売名
-      </label>
-      <button type="submit">検索</button>
-      <input type="hidden" name="formType" value="2" />
     </form>
   </body>
 </html>
