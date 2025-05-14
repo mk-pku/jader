@@ -59,4 +59,12 @@ public class DrugService {
 		List<NameStatsDto> raw = drugRepository.statsOnDrugNameByIndication(indications);
 		return CountToPercentage.process(raw);
 	}
+
+	public List<NameStatsDto> statsOnProductNameByIndication(List<String> indications) {
+		if (indications == null || indications.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<NameStatsDto> raw = drugRepository.statsOnProductNameByIndication(indications);
+		return CountToPercentage.process(raw);
+	}
 }

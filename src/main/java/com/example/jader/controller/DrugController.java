@@ -82,8 +82,7 @@ public class DrugController {
 			reactionService.statsOnReactionTermByMedicineName(candArray);
 
 		model.addAttribute("nameCounts", reactionCounts);
-		model.addAttribute("selectedNamesForDisplay",
-						   String.join(", ", candArray));
+		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
 		return "result";
 	}
 	
@@ -101,8 +100,7 @@ public class DrugController {
 			drugService.statsOnIndicationByMedicineName(candArray);
 
 		model.addAttribute("nameCounts", indicationCounts);
-		model.addAttribute("selectedNamesForDisplay",
-						   String.join(", ", candArray));
+		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
 		return "result";
 	}
 	
@@ -118,10 +116,12 @@ public class DrugController {
 
 		List<NameStatsDto> drugNameCounts =
 			drugService.statsOnDrugNameByIndication(candArray);
+		List<NameStatsDto> productNameCounts =
+			drugService.statsOnProductNameByIndication(candArray);
 
 		model.addAttribute("nameCounts", drugNameCounts);
-		model.addAttribute("selectedNamesForDisplay",
-						   String.join(", ", candArray));
+		model.addAttribute("subNameCounts", productNameCounts);
+		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
 		return "result";
 	}
 }

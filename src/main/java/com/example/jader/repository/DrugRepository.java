@@ -57,4 +57,14 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "ORDER BY COUNT(d) DESC, "
 		 + "COALESCE(d.drugName, '元データ未入力') ASC")
 	List<NameStatsDto> statsOnDrugNameByIndication(@Param("names") List<String> names);
+
+	// 特定の使用理由を持つ医薬品（販売名）の件数
+	@Query("SELECT new com.example.jader.model.NameStatsDto("
+    	 + " COALESCE(d.productName, '元データ未入力'), COUNT(d)) "
+		 + "FROM DrugEntry d "
+		 + "WHERE d.indication IN :names "
+		 + "GROUP BY COALESCE(d.productName, '元データ未入力') "
+		 + "ORDER BY COUNT(d) DESC, "
+		 + "COALESCE(d.productName, '元データ未入力') ASC")
+	List<NameStatsDto> statsOnProductNameByIndication(@Param("names") List<String> names);
 }

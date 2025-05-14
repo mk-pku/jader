@@ -8,18 +8,19 @@
     <h1>有害事象一覧</h1>
     <p>対象医薬品: <strong th:text="${selectedNamesForDisplay}"></strong></p>
 
+    <!-- メインテーブル -->
     <div th:if="${nameCounts != null and !#lists.isEmpty(nameCounts)}">
       <table>
         <thead>
           <tr>
             <th>有害事象</th>
-            <th>件数</th>
+            <th>割合</th>
           </tr>
         </thead>
         <tbody>
           <tr th:each="dto : ${nameCounts}">
             <td th:text="${dto.name}"></td>
-            <td th:text="${dto.getPercentageDisplay}"></td>
+            <td th:text="${dto.percentageDisplay}"></td>
           </tr>
         </tbody>
       </table>
@@ -28,6 +29,30 @@
       <p>該当する有害事象の情報はありませんでした。</p>
     </div>
 
-    <p><a th:href="@{/drugs/search}">再度医薬品を検索する</a></p>
+    <!-- サブテーブル -->
+    <div
+      th:if="${subNameCounts != null and !#lists.isEmpty(subNameCounts)}"
+      style="margin-top: 2em"
+    >
+      <h2>サブカテゴリ一覧</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>サブ項目</th>
+            <th>割合</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="dto : ${subNameCounts}">
+            <td th:text="${dto.name}"></td>
+            <td th:text="${dto.percentageDisplay}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top: 2em">
+      <a th:href="@{/drugs/search}">再度医薬品を検索する</a>
+    </p>
   </body>
 </html>

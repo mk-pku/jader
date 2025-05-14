@@ -22,7 +22,5 @@ public interface ReactionRepository extends JpaRepository<ReacEntry, Integer> {
 		 + " AND (d.drugName IN :names OR d.productName IN :names) "
 		 + "GROUP BY r.reactionTerm "
 		 + "ORDER BY COUNT(r.reactionTerm) DESC")
-
-	List<NameStatsDto> statsOnReactionTermByMedicineName(
-		@Param("names") List<String> names);
+	List<NameStatsDto> statsOnReactionTermByMedicineName(@Param("names") List<String> names);
 }
