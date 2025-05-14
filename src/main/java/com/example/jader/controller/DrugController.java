@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.jader.model.DrugNameCountDto;
 import com.example.jader.model.NameCountDto;
+import com.example.jader.model.NameStatsDto;
 import com.example.jader.service.DrugService;
 import com.example.jader.service.ReactionService;
 
@@ -31,6 +31,24 @@ public class DrugController {
 		return "index";
 	}
 
+	@PostMapping(value="/select", params="formType=2")
+	public String selectIndicationPage(
+			@RequestParam(required=false) String keyword,
+			@RequestParam(required=false) String nameType,
+			@RequestParam(required=false) String formType,
+			Model model) {
+
+		List<NameCountDto> results = null;
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			results = drugService.countByIndicationLike(keyword.trim());
+		}
+
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("formType", formType);
+		model.addAttribute("results", results);
+		return "select";
+	}
+
 	@PostMapping("/select")
 	public String selectPage(
 			@RequestParam(required=false) String keyword,
@@ -38,9 +56,9 @@ public class DrugController {
 			@RequestParam(required=false) String formType,
 			Model model) {
 
-		List<DrugNameCountDto> results = null;
+		List<NameCountDto> results = null;
 		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = drugService.searchDrugNameAndCount(keyword.trim(), nameType);
+			results = drugService.countByMedicineNameLike(keyword.trim(), nameType);
 		}
 
 		model.addAttribute("keyword", keyword);
@@ -60,12 +78,11 @@ public class DrugController {
 			return "index";
 		}
 
-		List<NameCountDto> reactionCounts =
-			reactionService.getReactionTermCounts(candArray);
+		List<NameStatsDto> reactionCounts =
+			reactionService.statsOnReactionTermByMedicineName(candArray);
 
 		model.addAttribute("nameCounts", reactionCounts);
-		model.addAttribute("selectedNamesForDisplay",
-						   String.join(", ", candArray));
+		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
 		return "result";
 	}
 	
@@ -79,12 +96,32 @@ public class DrugController {
 			return "index";
 		}
 
-		List<NameCountDto> reactionCounts =
-			drugService.getIndicationCounts(candArray);
+		List<NameStatsDto> indicationCounts =
+			drugService.statsOnIndicationByMedicineName(candArray);
 
-		model.addAttribute("nameCounts", reactionCounts);
-		model.addAttribute("selectedNamesForDisplay",
-						   String.join(", ", candArray));
+		model.addAttribute("nameCounts", indicationCounts);
+		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
+		return "result";
+	}
+	
+	@PostMapping(value="/result", params="formType=2")
+	public String resultPage2(
+			@RequestParam(required=false) List<String> candArray,
+			Model model) {
+
+		if (candArray == null || candArray.isEmpty()) {
+			model.addAttribute("message", "使用理由が選択されていません。");
+			return "index";
+		}
+
+		List<NameStatsDto> drugNameCounts =
+			drugService.statsOnDrugNameByIndication(candArray);
+		List<NameStatsDto> productNameCounts =
+			drugService.statsOnProductNameByIndication(candArray);
+
+		model.addAttribute("nameCounts", drugNameCounts);
+		model.addAttribute("subNameCounts", productNameCounts);
+		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
 		return "result";
 	}
 }

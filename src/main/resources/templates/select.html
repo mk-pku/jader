@@ -15,11 +15,7 @@
           <thead>
             <tr>
               <th>
-                <input
-                  type="checkbox"
-                  id="selectAll"
-                  onclick="toggleAll(this)"
-                />
+                <input type="checkbox" id="selectAll" onclick="toggleAll(this)" />
                 全選択
               </th>
               <th>医薬品一般名</th>
@@ -32,24 +28,19 @@
                 <input
                   type="checkbox"
                   name="candArray"
-                  th:value="${r.drugName}"
+                  th:value="${r.name}"
                   th:id="'chk_' + ${stat.index}"
                   class="chk"
                 />
               </td>
               <td>
-                <label
-                  th:for="'chk_' + ${stat.index}"
-                  th:text="${r.drugName}"
-                ></label>
+                <label th:for="'chk_' + ${stat.index}" th:text="${r.name}"></label>
               </td>
               <td th:text="${r.count}"></td>
             </tr>
           </tbody>
         </table>
-        <button type="submit" style="margin-top: 10px">
-          選択した医薬品の有害事象を表示
-        </button>
+        <button type="submit" style="margin-top: 10px">選択した医薬品の有害事象を表示</button>
         <input type="hidden" name="formType" th:value="${formType}" />
       </form>
     </div>
