@@ -49,6 +49,24 @@ public class DrugController {
 		return "select";
 	}
 
+	@PostMapping(value="/select", params="formType=3")
+	public String selectReactionTermPage(
+			@RequestParam(required=false) String keyword,
+			@RequestParam(required=false) String nameType,
+			@RequestParam(required=false) String formType,
+			Model model) {
+
+		List<NameCountDto> results = null;
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			results = reactionService.countByReactionTermLike(keyword.trim());
+		}
+
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("formType", formType);
+		model.addAttribute("results", results);
+		return "select";
+	}
+
 	@PostMapping("/select")
 	public String selectPage(
 			@RequestParam(required=false) String keyword,
@@ -118,6 +136,27 @@ public class DrugController {
 			drugService.statsOnDrugNameByIndication(candArray);
 		List<NameStatsDto> productNameCounts =
 			drugService.statsOnProductNameByIndication(candArray);
+
+		model.addAttribute("nameCounts", drugNameCounts);
+		model.addAttribute("subNameCounts", productNameCounts);
+		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
+		return "result";
+	}
+
+	@PostMapping(value="/result", params="formType=3")
+	public String resultPage3(
+			@RequestParam(required=false) List<String> candArray,
+			Model model) {
+
+		if (candArray == null || candArray.isEmpty()) {
+			model.addAttribute("message", "使用理由が選択されていません。");
+			return "index";
+		}
+
+		List<NameStatsDto> drugNameCounts =
+			reactionService.statsOnDrugNameByReactionTerm(candArray);
+		List<NameStatsDto> productNameCounts =
+			reactionService.statsOnProductNameByReactionTerm(candArray);
 
 		model.addAttribute("nameCounts", drugNameCounts);
 		model.addAttribute("subNameCounts", productNameCounts);
