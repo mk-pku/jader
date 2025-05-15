@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" jader_db <<'EOSQL'
+mysql --local-infile=1 -u root -p"$MYSQL_ROOT_PASSWORD" jader_db <<'EOSQL'
 -- demo.csv の取り込み
 LOAD DATA LOCAL INFILE '/csv/demo.csv'
 INTO TABLE demo
