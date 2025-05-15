@@ -1,0 +1,19 @@
+services:
+  db:
+    image: mysql:9
+    command: --local-infile=1
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: jader_db
+      MYSQL_USER: mysql_user
+      MYSQL_PASSWORD: mysql_password
+      TZ: "Asia/Tokyo"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./scripts:/docker-entrypoint-initdb.d
+      - ./scripts/csv:/csv
+
+volumes:
+  db_data:

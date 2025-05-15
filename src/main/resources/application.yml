@@ -2,9 +2,9 @@ spring:
   application:
     name: jader
   datasource:
-    url: jdbc:mysql://localhost:3306/pmda_fukusayoudb
+    url: jdbc:mysql://127.0.0.1:3307/jader_db
     username: root
-    password: MySQL
+    password: root_password
   jpa:
     show-sql: true
 logging:
