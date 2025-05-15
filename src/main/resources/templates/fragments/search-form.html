@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <div th:fragment="searchForm(title, formType, showCategory)">
+      <h1 th:text="${title}">検索フォーム</h1>
+      <form th:action="@{/drugs/select}" method="post">
+        <input type="hidden" name="formType" th:value="${formType}" />
+        <input type="text" name="keyword" placeholder="キーワードを入力…" th:value="${keyword}" />
+
+        <div th:if="${showCategory}">
+          <label>
+            <input
+              type="radio"
+              name="nameType"
+              value="generic"
+              th:checked="${nameType=='generic'}"
+            />
+            一般名
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="nameType"
+              value="product"
+              th:checked="${nameType=='product'}"
+            />
+            販売名
+          </label>
+        </div>
+
+        <button type="submit">検索</button>
+      </form>
+    </div>
+  </body>
+</html>
