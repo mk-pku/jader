@@ -2,12 +2,15 @@ package com.example.jader.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.jader.model.DrugEntry;
+import com.example.jader.model.DrugSummaryDto;
 import com.example.jader.model.NameCountDto; // 作成したDTOをインポート
 import com.example.jader.model.NameStatsDto;
 
@@ -67,4 +70,16 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		 + "ORDER BY COUNT(d) DESC, "
 		 + "COALESCE(d.productName, '元データ未入力') ASC")
 	List<NameStatsDto> statsOnProductNameByIndication(@Param("names") List<String> names);
+
+	// 部分一致検索 + ページネーション
+	@Query("SELECT new com.example.jader.model.DrugSummaryDto("
+    	 + " d.demo.caseId, d.drugName, d.productName) "
+		 + "FROM DrugEntry d "
+		 + "WHERE (:nameType = 'generic' AND LOWER(d.drugName) LIKE LOWER(CONCAT('%', :keyword, '%'))) "
+		 + " OR (:nameType = 'product' AND LOWER(d.productName) LIKE LOWER(CONCAT('%', :keyword, '%'))) ")
+	Page<DrugSummaryDto> findByKeyword(
+		@Param("keyword") String keyword,
+		@Param("nameType") String nameType,
+		Pageable pageable
+	);
 }

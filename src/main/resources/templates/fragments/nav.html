@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <nav th:fragment="nav(activeTab)">
+      <ul class="main-tabs">
+        <li th:classappend="${activeTab=='drugs'} ? ' active'">
+          <a th:href="@{/drugs/nameSearch}">医薬品検索</a>
+        </li>
+        <li th:classappend="${activeTab=='indications'} ? ' active'">
+          <a th:href="@{/drugs/indicationSearch}">症状検索</a>
+        </li>
+        <li th:classappend="${activeTab=='reactions'} ? ' active'">
+          <a th:href="@{/reacs/termSearch}">副作用検索</a>
+        </li>
+        <li th:classappend="${activeTab=='xxxx'} ? ' active'">
+          <a th:href="@{/xxxx/search}">XXXX検索</a>
+        </li>
+      </ul>
+    </nav>
+  </body>
+</html>

@@ -3,9 +3,12 @@ package com.example.jader.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.jader.model.DrugSummaryDto;
 import com.example.jader.model.NameCountDto;
 import com.example.jader.model.NameStatsDto;
 import com.example.jader.repository.DrugRepository;
@@ -66,5 +69,12 @@ public class DrugService {
 		}
 		List<NameStatsDto> raw = drugRepository.statsOnProductNameByIndication(indications);
 		return CountToPercentage.process(raw);
+	}
+
+	public Page<DrugSummaryDto> findByKeyword(String keyword, String nameType, Pageable pageable) {
+		if (keyword == null || keyword.isBlank()) {
+        	return Page.empty(pageable);
+        }
+		return drugRepository.findByKeyword(keyword.trim(), nameType, pageable);
 	}
 }

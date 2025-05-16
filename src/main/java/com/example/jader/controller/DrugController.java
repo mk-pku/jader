@@ -1,166 +1,50 @@
 package com.example.jader.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.jader.model.NameCountDto;
-import com.example.jader.model.NameStatsDto;
+import com.example.jader.model.DrugSummaryDto;
 import com.example.jader.service.DrugService;
-import com.example.jader.service.ReactionService;
 
 @Controller
 @RequestMapping("/drugs")
 public class DrugController {
-
+	
 	private final DrugService drugService;
-	private final ReactionService reactionService;
-
-	public DrugController(DrugService drugService, ReactionService reactionService) {
+	
+	public DrugController(DrugService drugService) {
 		this.drugService = drugService;
-		this.reactionService = reactionService;
 	}
 	
-	@GetMapping("")
-	public String index() {
-		return "index";
+	@GetMapping("/nameSearch")
+	public String nameSearchForm(Model model) {
+		model.addAttribute("activeTab", "drugs");
+		return "drugs/name-search";
 	}
 
-	@PostMapping(value="/select", params="formType=2")
-	public String selectIndicationPage(
-			@RequestParam(required=false) String keyword,
-			@RequestParam(required=false) String nameType,
-			@RequestParam(required=false) String formType,
-			Model model) {
+	@GetMapping("/nameSearchResult")
+	public String nameSearchResult(
+		@RequestParam(required=false) String keyword,
+		@RequestParam(required=false, defaultValue="generic") String nameType,
+		@RequestParam(required=false, defaultValue="0") int page,
+		Model model) {
+		
+		Pageable pageable = PageRequest.of(page, 20, Sort.by("caseId").ascending());
+        Page<DrugSummaryDto> results = drugService.findByKeyword(keyword, nameType, pageable);
 
-		List<NameCountDto> results = null;
-		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = drugService.countByIndicationLike(keyword.trim());
-		}
-
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("formType", formType);
 		model.addAttribute("results", results);
-		return "select";
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("nameType", nameType);
+        return "drugs/name-search-result";
 	}
-
-	@PostMapping(value="/select", params="formType=3")
-	public String selectReactionTermPage(
-			@RequestParam(required=false) String keyword,
-			@RequestParam(required=false) String nameType,
-			@RequestParam(required=false) String formType,
-			Model model) {
-
-		List<NameCountDto> results = null;
-		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = reactionService.countByReactionTermLike(keyword.trim());
-		}
-
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("formType", formType);
-		model.addAttribute("results", results);
-		return "select";
-	}
-
-	@PostMapping("/select")
-	public String selectPage(
-			@RequestParam(required=false) String keyword,
-			@RequestParam(required=false, defaultValue="generic") String nameType,
-			@RequestParam(required=false) String formType,
-			Model model) {
-
-		List<NameCountDto> results = null;
-		if (keyword != null && !keyword.trim().isEmpty()) {
-			results = drugService.countByMedicineNameLike(keyword.trim(), nameType);
-		}
-
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("nameType", nameType);
-		model.addAttribute("formType", formType);
-		model.addAttribute("results", results);
-		return "select";
-	}
-
-	@PostMapping(value="/result", params="formType=0")
-	public String resultPage0(
-			@RequestParam(required=false) List<String> candArray,
-			Model model) {
-
-		if (candArray == null || candArray.isEmpty()) {
-			model.addAttribute("message", "医薬品が選択されていません。");
-			return "index";
-		}
-
-		List<NameStatsDto> reactionCounts =
-			reactionService.statsOnReactionTermByMedicineName(candArray);
-
-		model.addAttribute("nameCounts", reactionCounts);
-		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
-		return "result";
-	}
-	
-	@PostMapping(value="/result", params="formType=1")
-	public String resultPage1(
-			@RequestParam(required=false) List<String> candArray,
-			Model model) {
-
-		if (candArray == null || candArray.isEmpty()) {
-			model.addAttribute("message", "医薬品が選択されていません。");
-			return "index";
-		}
-
-		List<NameStatsDto> indicationCounts =
-			drugService.statsOnIndicationByMedicineName(candArray);
-
-		model.addAttribute("nameCounts", indicationCounts);
-		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
-		return "result";
-	}
-	
-	@PostMapping(value="/result", params="formType=2")
-	public String resultPage2(
-			@RequestParam(required=false) List<String> candArray,
-			Model model) {
-
-		if (candArray == null || candArray.isEmpty()) {
-			model.addAttribute("message", "使用理由が選択されていません。");
-			return "index";
-		}
-
-		List<NameStatsDto> drugNameCounts =
-			drugService.statsOnDrugNameByIndication(candArray);
-		List<NameStatsDto> productNameCounts =
-			drugService.statsOnProductNameByIndication(candArray);
-
-		model.addAttribute("nameCounts", drugNameCounts);
-		model.addAttribute("subNameCounts", productNameCounts);
-		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
-		return "result";
-	}
-
-	@PostMapping(value="/result", params="formType=3")
-	public String resultPage3(
-			@RequestParam(required=false) List<String> candArray,
-			Model model) {
-
-		if (candArray == null || candArray.isEmpty()) {
-			model.addAttribute("message", "使用理由が選択されていません。");
-			return "index";
-		}
-
-		List<NameStatsDto> drugNameCounts =
-			reactionService.statsOnDrugNameByReactionTerm(candArray);
-		List<NameStatsDto> productNameCounts =
-			reactionService.statsOnProductNameByReactionTerm(candArray);
-
-		model.addAttribute("nameCounts", drugNameCounts);
-		model.addAttribute("subNameCounts", productNameCounts);
-		model.addAttribute("selectedNamesForDisplay", String.join(", ", candArray));
-		return "result";
-	}
+  
+//  @GetMapping  // or POST → 結果表示
+//  public String searchResult(...) { … }
 }

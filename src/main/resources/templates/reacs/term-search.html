@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout('副作用検索')">
+  <body>
+    <div th:fragment="content">
+      <div th:replace="fragments/search-form :: searchForm('副作用検索', 2, false)"></div>
+    </div>
+  </body>
+</html>

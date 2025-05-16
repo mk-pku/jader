@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(pageTitle)">
+  <head>
+    <meta charset="UTF-8" />
+    <title th:text="${pageTitle}">ページタイトル</title>
+    <!-- <link rel="stylesheet" th:href="@{/css/common.css}" /> -->
+  </head>
+  <body>
+    <div th:insert="fragments/nav :: nav(${activeTab})"></div>
+
+    <div th:insert="~{::content}"></div>
+
+    <footer>© 2025 くすり安心箱</footer>
+  </body>
+</html>

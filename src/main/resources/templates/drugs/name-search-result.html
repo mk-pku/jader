@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout('医薬品検索')">
+  <div th:fragment="content">
+    <div th:replace="fragments/nav :: nav('drugs')"></div>
+    <div th:replace="fragments/search-form :: searchForm('医薬品検索', 0, true)"></div>
+
+    <table th:if="${!results.empty}">
+      <thead>
+        <tr>
+          <th>症例番号</th>
+          <th>一般名</th>
+          <th>販売名</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="dto : ${results.content}">
+          <td>
+            <a th:href="@{/drugs/{id}(id=${dto.caseId})}" th:text="${dto.caseId}"></a>
+          </td>
+          <td th:text="${dto.drugName}"></td>
+          <td th:text="${dto.productName}"></td>
+        </tr>
+      </tbody>
+    </table>
+    <p th:if="${results.empty}">該当データがありません。</p>
+
+    <div class="pagination" th:if="${results.totalPages > 1}">
+      <a
+        th:if="${results.hasPrevious()}"
+        th:href="@{/drugs/search(keyword=${keyword}, nameType=${nameType}, page=${results.number - 1})}"
+      >
+        前へ
+      </a>
+      <span th:text="${results.number + 1} + ' / ' + ${results.totalPages}"></span>
+      <a
+        th:if="${results.hasNext()}"
+        th:href="@{/drugs/search(keyword=${keyword}, nameType=${nameType}, page=${results.number + 1})}"
+      >
+        次へ
+      </a>
+    </div>
+  </div>
+</html>
