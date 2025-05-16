@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <body>
-    <div th:fragment="searchForm(title, formType, showCategory)">
+    <div th:fragment="searchForm(title, action, formType, showCategory)">
       <h1 th:text="${title}">検索フォーム</h1>
-      <form th:action="@{/drugs/select}" method="post">
+      <form th:action="@{${action}}" method="get">
         <input type="hidden" name="formType" th:value="${formType}" />
         <input type="text" name="keyword" placeholder="キーワードを入力…" th:value="${keyword}" />
 

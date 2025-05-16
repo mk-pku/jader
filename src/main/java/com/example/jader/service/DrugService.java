@@ -77,4 +77,19 @@ public class DrugService {
         }
 		return drugRepository.findByKeyword(keyword.trim(), nameType, pageable);
 	}
+
+	public Page<NameCountDto> findByDrugNameLikePage(String keyword, Pageable pageable) {
+		if (keyword == null || keyword.isBlank()) {
+        	return Page.empty(pageable);
+        }
+		return drugRepository.findByDrugNameLikePage(keyword.trim(), pageable);
+	}
+
+	public List<NameStatsDto> statsOnIndicationByDrugName(String drugNames) {
+		if (drugNames == null || drugNames.isBlank()) {
+			return Collections.emptyList();
+		}
+		List<NameStatsDto> raw = drugRepository.statsOnIndicationByDrugName(drugNames);
+		return CountToPercentage.process(raw);
+	}
 }

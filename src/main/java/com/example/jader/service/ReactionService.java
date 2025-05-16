@@ -51,4 +51,12 @@ public class ReactionService {
 		List<NameStatsDto> raw = reactionRepository.statsOnProductNameByReactionTerm(reactionTerm);
 		return CountToPercentage.process(raw);
 	}
+
+	public List<NameStatsDto> statsOnReactionTermByDrugName(String drugNames) {
+		if (drugNames == null || drugNames.isBlank()) {
+			return Collections.emptyList();
+		}
+		List<NameStatsDto> raw = reactionRepository.statsOnReactionTermByDrugName(drugNames);
+		return CountToPercentage.process(raw);
+	}
 }

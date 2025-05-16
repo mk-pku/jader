@@ -82,4 +82,25 @@ public interface DrugRepository extends JpaRepository<DrugEntry, Integer> {
 		@Param("nameType") String nameType,
 		Pageable pageable
 	);
+
+	// 医薬品（一般名）の部分一致検索 + ページネーション
+	@Query("SELECT new com.example.jader.model.NameCountDto(d.drugName, COUNT(d)) "
+		 + "FROM DrugEntry d "
+		 + "WHERE d.drugName LIKE CONCAT('%', :keyword, '%') "
+		 + "GROUP BY d.drugName "
+		 + "ORDER BY COUNT(d) DESC")
+	Page<NameCountDto> findByDrugNameLikePage(
+		@Param("keyword") String keyword,
+		Pageable pageable
+	);
+
+	// 特定の医薬品（一般名）を持つ使用理由の件数（10件）
+	@Query("SELECT new com.example.jader.model.NameStatsDto("
+    	 + " COALESCE(d.indication, '元データ未入力'), COUNT(d)) "
+		 + "FROM DrugEntry d "
+		 + "WHERE d.drugName = :name "
+		 + "GROUP BY COALESCE(d.indication, '元データ未入力') "
+		 + "ORDER BY COUNT(d) DESC "
+		 + "LIMIT 10")
+	List<NameStatsDto> statsOnIndicationByDrugName(@Param("name") String name);
 }
