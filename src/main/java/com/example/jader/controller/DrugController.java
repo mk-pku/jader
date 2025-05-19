@@ -3,17 +3,20 @@ package com.example.jader.controller;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.jader.model.NameCountDto;
+import com.example.jader.model.CountResultDto;
+import com.example.jader.model.DrugEntry;
+import com.example.jader.model.DrugSearchDto;
 import com.example.jader.model.NameStatsDto;
 import com.example.jader.service.DrugService;
 import com.example.jader.service.ReactionService;
@@ -29,38 +32,65 @@ public class DrugController {
 		this.drugService = drugService;
 		this.reacService = reacService;
 	}
-	
-	@GetMapping("/nameSearch")
-	public String nameSearchForm(Model model) {
-		model.addAttribute("activeTab", "drugs");
-		return "drugs/name-search";
-	}
 
-	@GetMapping("/nameSearchResult")
+	@GetMapping("/search/result")
 	public String nameSearchResult(
-		@RequestParam(required=false) String keyword,
-		@RequestParam(required=false, defaultValue="generic") String nameType,
-		@RequestParam(required=false, defaultValue="0") int page,
-		Model model) {
-		
-		Pageable pageable = PageRequest.of(page, 20, Sort.unsorted());
-        Page<NameCountDto> results = drugService.findByDrugNameLikePage(keyword, pageable);
+			@ModelAttribute DrugSearchDto drugSearchDto,
+			@PageableDefault(size=20, sort="id", direction=Sort.Direction.ASC) Pageable pageable,
+			Model model) {
 
-		model.addAttribute("results", results);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("nameType", nameType);
-        return "drugs/name-search-result";
+		Page<DrugEntry> resultsPage = drugService.search(drugSearchDto, pageable);
+
+		model.addAttribute("results", resultsPage);
+		model.addAttribute("drugSearchDto", drugSearchDto);
+		return "drugs/search-result";
+	}
+	
+	@GetMapping("/search/count")
+	public String searchCount(
+			@RequestParam(required = false) String fieldName,
+			@RequestParam(required=false) String keyword,
+			Pageable pageable,
+			Model model) {
+		
+		Page<CountResultDto> countResultsPage = drugService.countByFieldLike(fieldName, keyword, pageable);
+		model.addAttribute("countResultsPage", countResultsPage);
+		model.addAttribute("fieldName", fieldName);
+		model.addAttribute("keyword", keyword);
+
+        return "drugs/search-count";
 	}
 
-	@GetMapping("{drugName}")
+	@GetMapping("drugName/{drugName}")
 	public String showDrugName(@PathVariable String drugName, Model model) {
 		List<NameStatsDto> indicationStats = drugService.statsOnIndicationByDrugName(drugName);
 		List<NameStatsDto> reactionTermStats = reacService.statsOnReactionTermByDrugName(drugName);
-		
-		model.addAttribute("activeTab", "drugs");
-        model.addAttribute("drugName", drugName);
-        model.addAttribute("indicationStats", indicationStats);
-		model.addAttribute("reactionTermStats", reactionTermStats);
+
+        model.addAttribute("fieldName", drugName);
+        model.addAttribute("fieldStats1", indicationStats);
+		model.addAttribute("fieldStats2", reactionTermStats);
+        return "drugs/show";
+	}
+	
+	@GetMapping("productName/{productName}")
+	public String showProductName(@PathVariable String productName, Model model) {
+		List<NameStatsDto> indicationStats = drugService.statsOnIndicationByProductName(productName);
+		List<NameStatsDto> reactionTermStats = reacService.statsOnReactionTermByProductName(productName);
+
+        model.addAttribute("fieldName", productName);
+        model.addAttribute("fieldStats1", indicationStats);
+		model.addAttribute("fieldStats2", reactionTermStats);
+        return "drugs/show";
+	}
+	
+	@GetMapping("indication/{indication}")
+	public String showIndication(@PathVariable String indication, Model model) {
+		List<NameStatsDto> drugNameStats = drugService.statsOnDrugNameByIndication(indication);
+		List<NameStatsDto> productNameStats = drugService.statsOnProductNameByIndication(indication);
+
+        model.addAttribute("fieldName", indication);
+        model.addAttribute("fieldStats1", drugNameStats);
+        model.addAttribute("fieldStats2", productNameStats);
         return "drugs/show";
 	}
 }

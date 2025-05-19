@@ -3,13 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <title th:text="${pageTitle}">ページタイトル</title>
-    <!-- <link rel="stylesheet" th:href="@{/css/common.css}" /> -->
+    <link rel="stylesheet" th:href="@{/css/normalize.css}" />
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/nav.css}" />
+    <link rel="stylesheet" th:href="@{/css/search-form.css}" />
+    <link rel="stylesheet" th:href="@{/css/count-results.css}" />
+    <link rel="stylesheet" th:href="@{/css/field-stats.css}" />
   </head>
-  <body>
-    <div th:insert="fragments/nav :: nav(${activeTab})"></div>
+  <body id="layout">
+    <div th:replace="fragments/header :: header"></div>
 
-    <div th:insert="~{::content}"></div>
+    <main id="layout__main">
+      <div id="layout__container" th:insert="~{::content}"></div>
+    </main>
 
-    <footer>© 2025 くすり安心箱</footer>
+    <footer id="layout__footer">
+      <small>© 2025 くすり安心箱</small>
+    </footer>
   </body>
 </html>

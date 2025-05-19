@@ -1,0 +1,8 @@
+.field-stats__body {
+  background-color: var(--secondary-bg-color);
+}
+
+.field-stats__inner {
+  width: var(--search-tab-width);
+  margin: 0 auto;
+}

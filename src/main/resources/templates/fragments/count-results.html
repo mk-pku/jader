@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <div
+    th:fragment="countResultsFragment(
+				page, baseUrl, searchUrl,
+				groupValueHeader, keyword, fieldName, emptyMessage
+			)"
+    class="count-results"
+  >
+    <div class="results__table-wrapper">
+      <table th:if="${page != null and !#lists.isEmpty(page.content)}" class="results__table">
+        <thead>
+          <tr>
+            <th th:text="${groupValueHeader}">グループ項目値</th>
+            <th>件数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="dto : ${page.content}" class="results__row">
+            <td>
+              <a
+                th:href="@{|${baseUrl}/${fieldName}/${dto.groupValue}|}"
+                th:text="${dto.groupValue}"
+                >グループ値</a
+              >
+            </td>
+            <td th:text="${dto.count}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p th:if="${page == null or #lists.isEmpty(page.content)}" th:text="${emptyMessage}">
+      該当データがありません。
+    </p>
+
+    <nav
+      th:if="${page != null and page.totalPages > 1}"
+      class="results__pagination"
+      aria-label="ページネーション"
+    >
+      <ul class="results__pagination-list">
+        <li class="results__page-item" th:classappend="${!page.hasPrevious()} ? ' is-disabled'">
+          <a
+            th:if="${page.hasPrevious()}"
+            th:href="@{|${searchUrl}|(page=${page.number-1}, fieldName=${fieldName}, keyword=${keyword})}"
+            class="results__page-link"
+            >« 前へ</a
+          >
+          <span th:if="${!page.hasPrevious()}" class="results__page-link">« 前へ</span>
+        </li>
+
+        <li class="results__page-item is-current">
+          <span class="results__page-link">
+            <span th:text="${page.number+1}">1</span> /
+            <span th:text="${page.totalPages}">1</span>
+          </span>
+        </li>
+
+        <li class="results__page-item" th:classappend="${!page.hasNext()} ? ' is-disabled'">
+          <a
+            th:if="${page.hasNext()}"
+            th:href="@{|${searchUrl}|(page=${page.number+1}, fieldName=${fieldName}, keyword=${keyword})}"
+            class="results__page-link"
+            >次へ »</a
+          >
+          <span th:if="${!page.hasNext()}" class="results__page-link">次へ »</span>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</html>

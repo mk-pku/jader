@@ -1,0 +1,16 @@
+.header {
+  background-color: var(--primary-bg-color);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.header__container {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.header__title {
+  font-size: var(--font-size-lg);
+  margin: 0;
+  font-weight: bold;
+}

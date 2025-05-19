@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(${fieldName} + ' の詳細')">
+  <div th:fragment="content">
+    <div th:replace="fragments/nav :: nav(${activeTab})"></div>
+
+    <div class="field-stats__body">
+      <div class="field-stats__inner">
+        <h2 th:text="${fieldName}">副作用</h2>
+
+        <div
+          class="field-stats__item"
+          th:replace="fragments/field-stats :: statsSection(
+          '医薬品（一般名）と割合',
+          ${fieldStats1},
+          '医薬品（一般名）の情報はありませんでした。')"
+        ></div>
+
+        <div
+          class="field-stats__item"
+          th:replace="fragments/field-stats :: statsSection(
+          '医薬品（販売名）と割合',
+          ${fieldStats2},
+          '医薬品（販売名）の情報はありませんでした。')"
+        ></div>
+      </div>
+    </div>
+  </div>
+</html>

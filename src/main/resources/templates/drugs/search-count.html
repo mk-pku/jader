@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout('医薬品検索')">
+  <div th:fragment="content">
+    <div th:replace="fragments/nav :: nav(${activeTab})"></div>
+
+    <div
+      th:replace="fragments/count-results :: countResultsFragment(${countResultsPage}, '/drugs', '/drugs/search/count', 'グループ項目値', ${keyword}, ${fieldName}, '該当データがありません。')"
+    ></div>
+  </div>
+</html>
