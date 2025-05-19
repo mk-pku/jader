@@ -1,0 +1,19 @@
+.field-stats {
+  background-color: var(--secondary-bg-color);
+}
+
+.field-stats__inner {
+  width: var(--search-tab-width);
+  margin: 0 auto;
+  padding: var(--space-lg) 0;
+}
+
+.field-stats__title {
+  color: var(--secondary-color);
+}
+
+.field-stats__sections {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}

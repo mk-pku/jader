@@ -1,49 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-  <body>
-    <div th:fragment="searchForm(title, action, showCategory, fieldName)" class="search-form">
-      <h2 class="search-form__title" th:text="${title}">検索フォーム</h2>
-      <form th:action="@{${action}}" method="get" class="search-form__form">
-        <div class="search-form__field">
-          <input
-            type="text"
-            name="keyword"
-            placeholder="キーワードを入力…"
-            th:value="${keyword}"
-            class="search-form__input"
-          />
-        </div>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout('医薬品検索')">
+  <div th:fragment="content">
+    <div th:replace="fragments/nav :: nav(${activeTab})"></div>
 
-        <div th:if="${showCategory}" class="search-form__category">
-          <label>
-            <input
-              type="radio"
-              name="fieldName"
-              value="drugName"
-              th:checked="${fieldName=='drugName'}"
-              class="search-form__radio"
-            />
-            一般名
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="fieldName"
-              value="productName"
-              th:checked="${fieldName=='productName'}"
-              class="search-form__radio"
-            />
-            販売名
-          </label>
-        </div>
-        <div th:if="${!showCategory}">
-          <input type="hidden" name="fieldName" th:value="${fieldName}" />
-        </div>
-
-        <div class="search-form__actions">
-          <button type="submit" class="search-form__submit">検索</button>
-        </div>
-      </form>
-    </div>
-  </body>
+    <div
+      th:replace="fragments/count-results :: countResultsFragment(${countResultsPage}, '/reacs', '/reacs/search/count', 'グループ項目値', ${keyword}, ${fieldName}, '該当データがありません。')"
+    ></div>
+  </div>
 </html>

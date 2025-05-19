@@ -26,3 +26,14 @@
 .results__row td {
   padding: var(--space-md) 0;
 }
+
+.results__pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.results__pagination-list {
+  list-style: none;
+  display: flex;
+  gap: var(--space-md);
+}

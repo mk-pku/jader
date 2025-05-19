@@ -3,24 +3,26 @@
   <div th:fragment="content">
     <div th:replace="fragments/nav :: nav(${activeTab})"></div>
 
-    <h1 th:text="${fieldName}">医薬品名</h1>
+    <section class="field-stats">
+      <div class="field-stats__inner">
+        <h2 class="field-stats__title" th:text="${fieldName}">副作用</h2>
 
-    <div
-      th:replace="
-      fragments/field-stats :: statsSection(
-        '使用用途と割合',
-        ${fieldStats1},
-        '使用用途の情報はありませんでした。'
-      )"
-    ></div>
+        <div class="field-stats__sections">
+          <div
+            th:replace="fragments/field-stats :: statsSection(
+            '使用用途と割合',
+            ${fieldStats1},
+            '使用用途の情報はありませんでした。')"
+          ></div>
 
-    <div
-      th:replace="
-      fragments/field-stats :: statsSection(
-        '副作用と割合',
-        ${fieldStats2},
-        '副作用の情報はありませんでした。'
-      )"
-    ></div>
+          <div
+            th:replace="fragments/field-stats :: statsSection(
+            '副作用と割合',
+            ${fieldStats2},
+            '副作用の情報はありませんでした。')"
+          ></div>
+        </div>
+      </div>
+    </section>
   </div>
 </html>

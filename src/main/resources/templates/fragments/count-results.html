@@ -9,12 +9,6 @@
   >
     <div class="results__table-wrapper">
       <table th:if="${page != null and !#lists.isEmpty(page.content)}" class="results__table">
-        <thead>
-          <tr>
-            <th th:text="${groupValueHeader}">グループ項目値</th>
-            <th>件数</th>
-          </tr>
-        </thead>
         <tbody>
           <tr th:each="dto : ${page.content}" class="results__row">
             <td>
@@ -24,7 +18,7 @@
                 >グループ値</a
               >
             </td>
-            <td th:text="${dto.count}"></td>
+            <td th:text="|${dto.count}件|"></td>
           </tr>
         </tbody>
       </table>
