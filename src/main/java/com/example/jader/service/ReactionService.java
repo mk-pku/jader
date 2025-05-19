@@ -11,6 +11,8 @@ import org.springframework.util.StringUtils;
 
 import com.example.jader.model.CountResultDto;
 import com.example.jader.model.NameStatsDto;
+import com.example.jader.repository.FilterField;
+import com.example.jader.repository.GroupField;
 import com.example.jader.repository.ReactionRepository;
 import com.example.jader.util.CountToPercentage;
 
@@ -80,5 +82,14 @@ public class ReactionService {
 			case "reactionTerm" -> reactionRepository.countByReactionTermLike(keyword, pageable);
 			default -> throw new IllegalArgumentException("Unknown fieldName: " + fieldName);
 		};
+	}
+	
+	public List<NameStatsDto> getStats(
+			FilterField filterField,
+			GroupField  groupField,
+			String      filterValue,
+			int         limit) {
+		List<NameStatsDto> raw = reactionRepository.statsBy(filterField, groupField, filterValue, limit);
+		return CountToPercentage.process(raw);
 	}
 }

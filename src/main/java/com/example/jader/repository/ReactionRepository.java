@@ -14,7 +14,9 @@ import com.example.jader.model.NameStatsDto;
 import com.example.jader.model.ReacEntry;
 
 @Repository
-public interface ReactionRepository extends JpaRepository<ReacEntry, Integer> {
+public interface ReactionRepository extends
+		JpaRepository<ReacEntry, Integer>,
+		ReactionRepositoryCustom {
 
 	// 有害事象の部分一致検索
 	@Query("SELECT new com.example.jader.model.CountResultDto(r.reactionTerm, COUNT(r)) "

@@ -18,6 +18,8 @@ import com.example.jader.model.CountResultDto;
 import com.example.jader.model.DrugEntry;
 import com.example.jader.model.DrugSearchDto;
 import com.example.jader.model.NameStatsDto;
+import com.example.jader.repository.FilterField;
+import com.example.jader.repository.GroupField;
 import com.example.jader.service.DrugService;
 import com.example.jader.service.ReactionService;
 
@@ -63,8 +65,8 @@ public class DrugController {
 
 	@GetMapping("drugName/{drugName}")
 	public String showDrugName(@PathVariable String drugName, Model model) {
-		List<NameStatsDto> indicationStats = drugService.statsOnIndicationByDrugName(drugName);
-		List<NameStatsDto> reactionTermStats = reacService.statsOnReactionTermByDrugName(drugName);
+		List<NameStatsDto> indicationStats = drugService.getStats(FilterField.DRUG_NAME, GroupField.INDICATION, drugName, 10);
+		List<NameStatsDto> reactionTermStats = reacService.getStats(FilterField.DRUG_NAME, GroupField.REACTION_TERM, drugName, 10);
 
         model.addAttribute("fieldName", drugName);
         model.addAttribute("fieldStats1", indicationStats);
@@ -74,8 +76,8 @@ public class DrugController {
 	
 	@GetMapping("productName/{productName}")
 	public String showProductName(@PathVariable String productName, Model model) {
-		List<NameStatsDto> indicationStats = drugService.statsOnIndicationByProductName(productName);
-		List<NameStatsDto> reactionTermStats = reacService.statsOnReactionTermByProductName(productName);
+		List<NameStatsDto> indicationStats = drugService.getStats(FilterField.PRODUCT_NAME, GroupField.INDICATION, productName, 10);
+		List<NameStatsDto> reactionTermStats = reacService.getStats(FilterField.PRODUCT_NAME, GroupField.REACTION_TERM, productName, 10);
 
         model.addAttribute("fieldName", productName);
         model.addAttribute("fieldStats1", indicationStats);
@@ -85,8 +87,8 @@ public class DrugController {
 	
 	@GetMapping("indication/{indication}")
 	public String showIndication(@PathVariable String indication, Model model) {
-		List<NameStatsDto> drugNameStats = drugService.statsOnDrugNameByIndication(indication);
-		List<NameStatsDto> productNameStats = drugService.statsOnProductNameByIndication(indication);
+		List<NameStatsDto> drugNameStats = drugService.getStats(FilterField.INDICATION, GroupField.DRUG_NAME, indication, 10);
+		List<NameStatsDto> productNameStats = drugService.getStats(FilterField.INDICATION, GroupField.PRODUCT_NAME, indication, 10);
 
         model.addAttribute("fieldName", indication);
         model.addAttribute("fieldStats1", drugNameStats);

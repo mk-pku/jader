@@ -17,41 +17,8 @@ import com.example.jader.model.NameStatsDto;
 @Repository
 public interface DrugRepository extends
 		JpaRepository<DrugEntry, Integer>,
-		JpaSpecificationExecutor<DrugEntry> {
-
-	// 医薬品（一般名）の部分一致検索
-	@Query("SELECT new com.example.jader.model.CountResultDto(d.drugName, COUNT(d)) "
-		 + "FROM DrugEntry d "
-		 + "WHERE d.drugName LIKE CONCAT('%', :keyword, '%') "
-		 + "GROUP BY d.drugName "
-		 + "ORDER BY COUNT(d) DESC, d.drugName ASC")
-	Page<CountResultDto> countByDrugNameLike(@Param("keyword") String keyword, Pageable pageable);
-
-	// 医薬品（販売名）の部分一致検索
-	@Query("SELECT new com.example.jader.model.CountResultDto(d.productName, COUNT(d)) "
-		 + "FROM DrugEntry d "
-		 + "WHERE d.productName LIKE CONCAT('%', :keyword, '%') "
-		 + "GROUP BY d.productName "
-		 + "ORDER BY COUNT(d) DESC, d.productName ASC")
-	Page<CountResultDto> countByProductNameLike(@Param("keyword") String keyword, Pageable pageable);
-
-	// 使用理由の部分一致検索
-	@Query("SELECT new com.example.jader.model.CountResultDto(d.indication, COUNT(d)) "
-		 + "FROM DrugEntry d "
-		 + "WHERE d.indication LIKE CONCAT('%', :keyword, '%') "
-		 + "GROUP BY d.indication "
-		 + "ORDER BY COUNT(d) DESC, d.indication ASC")
-	Page<CountResultDto> countByIndicationLike(@Param("keyword") String keyword, Pageable pageable);
-
-	// 特定の医薬品名を持つ使用理由の件数
-	@Query("SELECT new com.example.jader.model.NameStatsDto("
-		 + " COALESCE(d.indication, '元データ未入力'), COUNT(d)) "
-		 + "FROM DrugEntry d "
-		 + "WHERE d.drugName IN :names OR d.productName IN :names "
-		 + "GROUP BY COALESCE(d.indication, '元データ未入力') "
-		 + "ORDER BY COUNT(d) DESC, "
-		 + "COALESCE(d.indication, '元データ未入力') ASC")
-	List<NameStatsDto> statsOnIndicationByMedicineName(@Param("names") List<String> names);
+		JpaSpecificationExecutor<DrugEntry>,
+		DrugRepositoryCustom {
 
 	// 特定の医薬品（一般名）を持つ使用理由の件数（10件）
 	@Query("SELECT new com.example.jader.model.NameStatsDto("

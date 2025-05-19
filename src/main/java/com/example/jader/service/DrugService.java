@@ -8,13 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.example.jader.model.CountResultDto;
 import com.example.jader.model.DrugEntry;
 import com.example.jader.model.DrugSearchDto;
 import com.example.jader.model.NameStatsDto;
 import com.example.jader.repository.DrugRepository;
+import com.example.jader.repository.FilterField;
+import com.example.jader.repository.GroupField;
 import com.example.jader.specification.DrugSpecification;
 import com.example.jader.util.CountToPercentage;
 
@@ -26,37 +27,6 @@ public class DrugService {
 
 	public DrugService(DrugRepository drugRepository) {
 		this.drugRepository = drugRepository;
-	}
-
-	/**
-	 * @param nameType "generic" or "product"
-	 */
-//	public List<CountResultDto> countByMedicineNameLike(String keyword, String nameType) {
-//		if (keyword == null || keyword.trim().isEmpty()) {
-//			return Collections.emptyList();
-//		}
-//		keyword = keyword.trim();
-//		if ("product".equals(nameType)) {
-//			return drugRepository.countByProductNameLike(keyword);
-//		} else {
-//			return drugRepository.countByDrugNameLike(keyword);
-//		}
-//	}
-//	
-//	public List<CountResultDto> countByIndicationLike(String keyword) {
-//		if (keyword == null || keyword.trim().isEmpty()) {
-//			return Collections.emptyList();
-//		}
-//		keyword = keyword.trim();
-//		return drugRepository.countByIndicationLike(keyword);
-//	}
-	
-	public List<NameStatsDto> statsOnIndicationByMedicineName(List<String> medicineNames) {
-		if (medicineNames == null || medicineNames.isEmpty()) {
-			return Collections.emptyList();
-		}
-		List<NameStatsDto> raw = drugRepository.statsOnIndicationByMedicineName(medicineNames);
-		return CountToPercentage.process(raw);
 	}
 
 	public List<NameStatsDto> statsOnIndicationByDrugName(String drugName) {
@@ -123,17 +93,18 @@ public class DrugService {
 		
 		return drugRepository.findAll(combinedSpec, pageable);
 	}
+
+	public Page<CountResultDto> countByFieldLike(
+			String fieldName, String keyword, Pageable pageable) {
+		return drugRepository.countByFieldLike(fieldName, keyword, pageable);
+	}
 	
-	public Page<CountResultDto> countByFieldLike(String fieldName, String keyword, Pageable pageable) {
-		if (!StringUtils.hasText(fieldName) || !StringUtils.hasText(keyword)) {
-			return Page.empty(pageable);
-		}
-		
-		return switch (fieldName) {
-			case "drugName" -> drugRepository.countByDrugNameLike(keyword, pageable);
-			case "productName" -> drugRepository.countByProductNameLike(keyword, pageable);
-			case "indication" -> drugRepository.countByIndicationLike(keyword, pageable);
-			default -> throw new IllegalArgumentException("Unknown fieldName: " + fieldName);
-		};
+	public List<NameStatsDto> getStats(
+			FilterField filterField,
+			GroupField  groupField,
+			String      filterValue,
+			int         limit) {
+		List<NameStatsDto> raw = drugRepository.statsBy(filterField, groupField, filterValue, limit);
+		return CountToPercentage.process(raw);
 	}
 }
