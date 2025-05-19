@@ -14,8 +14,6 @@ import com.example.jader.model.DrugEntry;
 import com.example.jader.model.DrugSearchDto;
 import com.example.jader.model.NameStatsDto;
 import com.example.jader.repository.DrugRepository;
-import com.example.jader.repository.FilterField;
-import com.example.jader.repository.GroupField;
 import com.example.jader.specification.DrugSpecification;
 import com.example.jader.util.CountToPercentage;
 
@@ -27,38 +25,6 @@ public class DrugService {
 
 	public DrugService(DrugRepository drugRepository) {
 		this.drugRepository = drugRepository;
-	}
-
-	public List<NameStatsDto> statsOnIndicationByDrugName(String drugName) {
-		if (drugName == null || drugName.isBlank()) {
-			return Collections.emptyList();
-		}
-		List<NameStatsDto> raw = drugRepository.statsOnIndicationByDrugName(drugName);
-		return CountToPercentage.process(raw);
-	}
-
-	public List<NameStatsDto> statsOnIndicationByProductName(String productName) {
-		if (productName == null || productName.isBlank()) {
-			return Collections.emptyList();
-		}
-		List<NameStatsDto> raw = drugRepository.statsOnIndicationByProductName(productName);
-		return CountToPercentage.process(raw);
-	}
-
-	public List<NameStatsDto> statsOnDrugNameByIndication(String indication) {
-		if (indication == null || indication.isBlank()) {
-			return Collections.emptyList();
-		}
-		List<NameStatsDto> raw = drugRepository.statsOnDrugNameByIndication(indication);
-		return CountToPercentage.process(raw);
-	}
-
-	public List<NameStatsDto> statsOnProductNameByIndication(String indication) {
-		if (indication == null || indication.isBlank()) {
-			return Collections.emptyList();
-		}
-		List<NameStatsDto> raw = drugRepository.statsOnProductNameByIndication(indication);
-		return CountToPercentage.process(raw);
 	}
 
 	public List<NameStatsDto> statsOnDrugNameByReactionTerm(String reactionTerm) {
@@ -100,8 +66,8 @@ public class DrugService {
 	}
 	
 	public List<NameStatsDto> getStats(
-			FilterField filterField,
-			GroupField  groupField,
+			String filterField,
+			String  groupField,
 			String      filterValue,
 			int         limit) {
 		List<NameStatsDto> raw = drugRepository.statsBy(filterField, groupField, filterValue, limit);

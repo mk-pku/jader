@@ -13,8 +13,8 @@ public interface DrugRepositoryCustom {
 			String fieldName, String keyword, Pageable pageable);
 
 	List<NameStatsDto> statsBy(
-		FilterField  filterField,
-		GroupField   groupField,
+			String  filterField,
+			String   groupField,
 		String       filterValue,
 		int          limit);
 }
