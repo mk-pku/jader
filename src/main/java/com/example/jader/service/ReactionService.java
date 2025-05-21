@@ -3,10 +3,12 @@ package com.example.jader.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.jader.model.NameCountDto;
+import com.example.jader.model.CountResultDto;
 import com.example.jader.model.NameStatsDto;
 import com.example.jader.repository.ReactionRepository;
 import com.example.jader.util.CountToPercentage;
@@ -18,14 +20,6 @@ public class ReactionService {
 
 	public ReactionService(ReactionRepository reactionRepository) {
 		this.reactionRepository = reactionRepository;
-	}
-
-	public List<NameCountDto> countByReactionTermLike(String keyword) {
-		if (keyword == null || keyword.trim().isEmpty()) {
-			return Collections.emptyList();
-		}
-		keyword = keyword.trim();
-		return reactionRepository.countByReactionTermLike(keyword);
 	}
 
 	public List<NameStatsDto> statsOnReactionTermByMedicineName(List<String> medicineNames) {
@@ -49,6 +43,36 @@ public class ReactionService {
 			return Collections.emptyList();
 		}
 		List<NameStatsDto> raw = reactionRepository.statsOnProductNameByReactionTerm(reactionTerm);
+		return CountToPercentage.process(raw);
+	}
+
+	public List<NameStatsDto> statsOnReactionTermByDrugName(String drugName) {
+		if (drugName == null || drugName.isBlank()) {
+			return Collections.emptyList();
+		}
+		List<NameStatsDto> raw = reactionRepository.statsOnReactionTermByDrugName(drugName);
+		return CountToPercentage.process(raw);
+	}
+
+	public List<NameStatsDto> statsOnReactionTermByProductName(String productName) {
+		if (productName == null || productName.isBlank()) {
+			return Collections.emptyList();
+		}
+		List<NameStatsDto> raw = reactionRepository.statsOnReactionTermByProductName(productName);
+		return CountToPercentage.process(raw);
+	}
+	
+	public Page<CountResultDto> countByFieldLike(
+			String fieldName, String keyword, Pageable pageable) {
+		return reactionRepository.countByFieldLike(fieldName, keyword, pageable);
+	}
+	
+	public List<NameStatsDto> getStats(
+			String filterField,
+			String  groupField,
+			String      filterValue,
+			int         limit) {
+		List<NameStatsDto> raw = reactionRepository.statsBy(filterField, groupField, filterValue, limit);
 		return CountToPercentage.process(raw);
 	}
 }

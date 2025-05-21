@@ -1,34 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <body>
-    <div th:fragment="searchForm(title, formType, showCategory)">
-      <h1 th:text="${title}">検索フォーム</h1>
-      <form th:action="@{/drugs/select}" method="post">
-        <input type="hidden" name="formType" th:value="${formType}" />
-        <input type="text" name="keyword" placeholder="キーワードを入力…" th:value="${keyword}" />
+    <div th:fragment="searchForm(title, action, showCategory, fieldName)" class="search-form">
+      <h2 class="search-form__title" th:text="${title}">検索フォーム</h2>
+      <form th:action="@{${action}}" method="get" class="search-form__form">
+        <div class="search-form__field">
+          <input
+            type="text"
+            name="keyword"
+            placeholder="キーワードを入力…"
+            th:value="${keyword}"
+            class="search-form__input"
+          />
+        </div>
 
-        <div th:if="${showCategory}">
+        <div th:if="${showCategory}" class="search-form__category">
           <label>
             <input
               type="radio"
-              name="nameType"
-              value="generic"
-              th:checked="${nameType=='generic'}"
+              name="fieldName"
+              value="drugName"
+              th:checked="${fieldName=='drugName'}"
+              class="search-form__radio"
             />
             一般名
           </label>
           <label>
             <input
               type="radio"
-              name="nameType"
-              value="product"
-              th:checked="${nameType=='product'}"
+              name="fieldName"
+              value="productName"
+              th:checked="${fieldName=='productName'}"
+              class="search-form__radio"
             />
             販売名
           </label>
         </div>
+        <div th:if="${!showCategory}">
+          <input type="hidden" name="fieldName" th:value="${fieldName}" />
+        </div>
 
-        <button type="submit">検索</button>
+        <div class="search-form__actions">
+          <button type="submit" class="search-form__submit">検索</button>
+        </div>
       </form>
     </div>
   </body>

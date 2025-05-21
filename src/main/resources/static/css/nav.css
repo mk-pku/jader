@@ -1,0 +1,21 @@
+.search-tabs {
+  width: var(--search-tab-width);
+  background-color: var(--secondary-bg-color);
+  margin: var(--space-lg) auto;
+  padding: var(--space-lg) var(--space-md);
+  border-radius: 5rem;
+  font-size: var(--font-size-lg);
+}
+
+.search-tabs ul {
+  list-style: none;
+  display: flex;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+}
+
+.search-tabs li {
+  flex: 1;
+  text-align: center;
+}

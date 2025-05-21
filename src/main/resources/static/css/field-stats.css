@@ -1,0 +1,29 @@
+.stats-section {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-section__header {
+}
+
+.stats-section__table-wrapper {
+  border: solid 2px var(--primary-bg-color);
+  border-radius: var(--space-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+  padding: 0 var(--space-lg);
+}
+
+.stats-section__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stats-section__row:not(:last-child) {
+  border-bottom: 2px solid var(--primary-bg-color);
+}
+
+.stats-section__row td {
+  padding: var(--space-md) 0;
+}

@@ -1,4 +1,19 @@
 services:
+  app:
+    image: gradle:8.14.0-jdk21
+    container_name: spring_app
+    working_dir: /home/gradle/project
+    volumes:
+      - ./:/home/gradle/project
+      - gradle_cache:/home/gradle/.gradle
+    ports:
+      - "8081:8080"
+    environment:
+      TZ: "Asia/Tokyo"
+    depends_on:
+      - db
+    command: gradle bootRun --no-daemon
+
   db:
     image: mysql:9
     command: --local-infile=1
@@ -12,8 +27,23 @@ services:
       TZ: "Asia/Tokyo"
     volumes:
       - db_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf:ro
       - ./scripts:/docker-entrypoint-initdb.d
       - ./scripts/csv:/csv
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    depends_on:
+      - db
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      TZ: "Asia/Tokyo"
+
 volumes:
   db_data:
+  gradle_cache:

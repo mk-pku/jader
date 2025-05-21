@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(${fieldName} + ' の詳細')">
+  <div th:fragment="content">
+    <div th:replace="fragments/nav :: nav(${activeTab})"></div>
+
+    <section class="field-stats">
+      <div class="field-stats__inner">
+        <h2 class="field-stats__title" th:text="${fieldName}">副作用</h2>
+
+        <div class="field-stats__sections">
+          <div
+            th:replace="fragments/field-stats :: statsSection(
+            '使用用途と割合',
+            ${fieldStats1},
+            '使用用途の情報はありませんでした。')"
+          ></div>
+
+          <div
+            th:replace="fragments/field-stats :: statsSection(
+            '副作用と割合',
+            ${fieldStats2},
+            '副作用の情報はありませんでした。')"
+          ></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</html>

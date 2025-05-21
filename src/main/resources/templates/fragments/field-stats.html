@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <div th:fragment="statsSection(title, stats, emptyMessage)" class="stats-section">
+      <div th:if="${stats != null and !#lists.isEmpty(stats)}">
+        <h3 class="stats-section__header" th:text="${title}">セクション見出し</h3>
+        <div class="stats-section__table-wrapper">
+          <table class="stats-section__table">
+            <tbody>
+              <tr th:each="dto : ${stats}" class="stats-section__row">
+                <td th:text="${dto.name}">名称</td>
+                <td th:text="${dto.percentageDisplay}">0.00%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p
+        th:if="${stats == null or #lists.isEmpty(stats)}"
+        class="stats-section__empty"
+        th:text="${emptyMessage}"
+      >
+        情報はありません。
+      </p>
+    </div>
+  </body>
+</html>

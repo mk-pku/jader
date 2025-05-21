@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head></head>
+  <body>
+    <!-- 医薬品検索 -->
+    <div th:replace="search-form :: searchForm('医薬品名→副作用', 0, true)"></div>
+
+    <!-- 医薬品検索2 -->
+    <div th:replace="search-form :: searchForm('医薬品名→症状', 1, true)"></div>
+
+    <!-- 医薬品検索3（ラジオ不要） -->
+    <div th:replace="search-form :: searchForm('症状→医薬品名', 2, false)"></div>
+
+    <!-- 医薬品検索4（ラジオ不要） -->
+    <div th:replace="search-form :: searchForm('副作用→医薬品名', 3, false)"></div>
+  </body>
+</html>

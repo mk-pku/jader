@@ -2,6 +2,7 @@ package com.example.jader.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +30,9 @@ public class DrugEntry {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Column(name="case_id", insertable=false, updatable=false)
+    private String caseId;
 	
 	private Byte reportCount;
 	private Short drugSeq;
